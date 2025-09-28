@@ -9,362 +9,18 @@ export const initializeStorage = () => {
       return;
     }
 
-    // Create dummy user ID for consistent data relationships
-    const dummyUserId = 'user-1234567890';
-    const dummyDoctorId = 'doctor-demo-456';
-
-    // Initialize medicines data
-    const defaultMedicines = [
-      {
-        id: 'med-1',
-        name: 'Paracetamol',
-        company: 'Generic',
-        dosage: '500mg',
-        category: 'Pain Relief',
-        price: 25,
-        description: 'Used for fever and pain relief'
-      },
-      {
-        id: 'med-2',
-        name: 'Amoxicillin',
-        company: 'Generic',
-        dosage: '250mg',
-        category: 'Antibiotic',
-        price: 45,
-        description: 'Antibiotic for bacterial infections'
-      },
-      {
-        id: 'med-3',
-        name: 'Metformin',
-        company: 'Generic',
-        dosage: '500mg',
-        category: 'Diabetes',
-        price: 35,
-        description: 'Used for type 2 diabetes management'
-      },
-      {
-        id: 'med-4',
-        name: 'Omeprazole',
-        company: 'Generic',
-        dosage: '20mg',
-        category: 'Gastric',
-        price: 30,
-        description: 'Used for acid reflux and stomach ulcers'
-      },
-      {
-        id: 'med-5',
-        name: 'Atorvastatin',
-        company: 'Generic',
-        dosage: '10mg',
-        category: 'Cholesterol',
-        price: 50,
-        description: 'Used to lower cholesterol levels'
-      },
-      {
-        id: 'med-6',
-        name: 'Aspirin',
-        company: 'Bayer',
-        dosage: '75mg',
-        category: 'Blood Thinner',
-        price: 15,
-        description: 'Low-dose aspirin for heart protection'
-      },
-      {
-        id: 'med-7',
-        name: 'Losartan',
-        company: 'Generic',
-        dosage: '50mg',
-        category: 'Blood Pressure',
-        price: 40,
-        description: 'Used for high blood pressure'
-      },
-      {
-        id: 'med-8',
-        name: 'Vitamin D3',
-        company: 'HealthVit',
-        dosage: '1000 IU',
-        category: 'Vitamin',
-        price: 20,
-        description: 'Vitamin D supplement'
-      }
-    ];
-
-    // Create dummy users with demo user
-    const defaultUsers = [
-      {
-        id: dummyUserId,
-        name: 'Ramu',
-        phone: '1234567890',
-        village: 'Demo Village',
-        age: 35,
-        location: { lat: 28.6139, lng: 77.2090 }, // Delhi coordinates
-        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days ago
-      }
-    ];
-
-    // Create dummy doctors
-    const defaultDoctors = [
-      {
-        id: dummyDoctorId,
-        name: 'Dr. Priya Sharma',
-        phone: '+91-9876540001',
-        specialization: 'General Medicine',
-        hospital: 'Primary Health Center',
-        experience: '8 years',
-        createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
-      }
-    ];
-
-    // Create dummy patients
-    const defaultPatients = [
-      {
-        id: dummyUserId,
-        name: 'Ramu',
-        age: 35,
-        phone: '1234567890',
-        village: 'Demo Village',
-        ownerRole: 'user',
-        ownerId: dummyUserId,
-        registeredBy: 'self',
-        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-      }
-    ];
-
-    // Demo health records for interview
-    const defaultHealthRecords = [
-      {
-        id: 'record-1',
-        patientId: dummyUserId,
-        title: 'Blood Test Results',
-        notes: 'Complete blood count and lipid profile. All values within normal range.',
-        fileName: 'blood_test_report.pdf',
-        uploadedBy: dummyUserId,
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days ago
-      },
-      {
-        id: 'record-2',
-        patientId: dummyUserId,
-        title: 'X-Ray Chest',
-        notes: 'Routine chest X-ray. No abnormalities detected. Lungs clear.',
-        fileName: 'chest_xray.jpg',
-        uploadedBy: dummyUserId,
-        createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString() // 14 days ago
-      },
-      {
-        id: 'record-3',
-        patientId: dummyUserId,
-        title: 'ECG Report',
-        notes: 'Electrocardiogram shows normal sinus rhythm. Heart rate: 72 bpm.',
-        fileName: 'ecg_report.pdf',
-        uploadedBy: dummyUserId,
-        createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString() // 21 days ago
-      },
-      {
-        id: 'record-4',
-        patientId: dummyUserId,
-        title: 'Diabetes Monitoring',
-        notes: 'HbA1c: 6.8%. Blood glucose levels improving with medication.',
-        fileName: 'diabetes_report.pdf',
-        uploadedBy: dummyUserId,
-        createdAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000).toISOString() // 28 days ago
-      },
-      {
-        id: 'record-5',
-        patientId: dummyUserId,
-        title: 'General Health Checkup',
-        notes: 'Annual health checkup completed. Blood pressure and vitals normal.',
-        fileName: 'health_checkup.pdf',
-        uploadedBy: dummyUserId,
-        createdAt: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString() // 35 days ago
-      }
-    ];
-
-    // Demo prescriptions for interview
-    const defaultPrescriptions = [
-      {
-        id: 'prescription-1',
-        patientId: dummyUserId,
-        doctorId: dummyDoctorId,
-        doctorName: 'Dr. Priya Sharma',
-        text: 'Metformin 500mg - Take twice daily after meals for diabetes management. Monitor blood sugar levels weekly.',
-        medicines: [
-          { name: 'Metformin', dosage: '500mg', frequency: 'Twice daily', duration: '30 days' }
-        ],
-        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
-      },
-      {
-        id: 'prescription-2',
-        patientId: dummyUserId,
-        doctorId: dummyDoctorId,
-        doctorName: 'Dr. Priya Sharma',
-        text: 'Paracetamol 500mg for fever and pain. Take as needed, maximum 3 times per day.',
-        medicines: [
-          { name: 'Paracetamol', dosage: '500mg', frequency: 'As needed (max 4/day)', duration: '5 days' }
-        ],
-        createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString() // 12 days ago
-      },
-      {
-        id: 'prescription-3',
-        patientId: dummyUserId,
-        doctorId: dummyDoctorId,
-        doctorName: 'Dr. Priya Sharma',
-        text: 'Atorvastatin 10mg for cholesterol management. Take once daily at night.',
-        medicines: [
-          { name: 'Atorvastatin', dosage: '10mg', frequency: 'Once daily (night)', duration: '60 days' }
-        ],
-        createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString() // 20 days ago
-      },
-      {
-        id: 'prescription-4',
-        patientId: dummyUserId,
-        doctorId: dummyDoctorId,
-        doctorName: 'Dr. Priya Sharma',
-        text: 'Vitamin D3 supplements for bone health. Take once daily with breakfast.',
-        medicines: [
-          { name: 'Vitamin D3', dosage: '1000 IU', frequency: 'Once daily', duration: '90 days' }
-        ],
-        createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString() // 25 days ago
-      }
-    ];
-
-    // Demo orders for interview
-    const defaultOrders = [
-      {
-        id: 'order-1',
-        userId: dummyUserId,
-        pharmacyId: 'pharmacy-1',
-        pharmacyName: 'HealthCare Pharmacy',
-        items: [
-          { medicineId: 'med-3', medicineName: 'Metformin', quantity: 2, price: 35 },
-          { medicineId: 'med-6', medicineName: 'Aspirin', quantity: 1, price: 15 }
-        ],
-        total: 85,
-        status: 'delivered',
-        deliveryAddress: 'Demo Village, PIN: 123456',
-        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-        deliveredAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
-      },
-      {
-        id: 'order-2',
-        userId: dummyUserId,
-        pharmacyId: 'pharmacy-2',
-        pharmacyName: 'City Medical Store',
-        items: [
-          { medicineId: 'med-1', medicineName: 'Paracetamol', quantity: 3, price: 25 }
-        ],
-        total: 75,
-        status: 'shipped',
-        deliveryAddress: 'Demo Village, PIN: 123456',
-        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-        shippedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString() // 8 hours ago
-      },
-      {
-        id: 'order-3',
-        userId: dummyUserId,
-        pharmacyId: 'pharmacy-1',
-        pharmacyName: 'HealthCare Pharmacy',
-        items: [
-          { medicineId: 'med-8', medicineName: 'Vitamin D3', quantity: 2, price: 20 }
-        ],
-        total: 40,
-        status: 'processing',
-        deliveryAddress: 'Demo Village, PIN: 123456',
-        createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString() // 4 hours ago
-      }
-    ];
-
-    // Create dummy pharmacies with realistic locations (removed rating/star)
-    const defaultPharmacies = [
-      {
-        id: 'pharmacy-1',
-        name: 'HealthCare Pharmacy',
-        phone: '+91-9876540101',
-        address: 'Main Market, Demo Village',
-        licenseNumber: 'DL-PHR-001',
-        ownerName: 'Suresh Gupta',
-        location: { lat: 28.6139, lng: 77.2090 },
-        distance: '0.5 km',
-        isOpen: true,
-        openTime: '08:00 AM',
-        closeTime: '10:00 PM',
-        createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'pharmacy-2',
-        name: 'City Medical Store',
-        phone: '+91-9876540102',
-        address: 'Hospital Road, Demo Village',
-        licenseNumber: 'DL-PHR-002',
-        ownerName: 'Meena Sharma',
-        location: { lat: 28.6129, lng: 77.2080 },
-        distance: '1.2 km',
-        isOpen: true,
-        openTime: '07:00 AM',
-        closeTime: '11:00 PM',
-        createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'pharmacy-3',
-        name: 'Apollo Pharmacy',
-        phone: '+91-9876540103',
-        address: 'Civil Lines, Demo Village',
-        licenseNumber: 'DL-PHR-003',
-        ownerName: 'Rajesh Verma',
-        location: { lat: 28.6149, lng: 77.2100 },
-        distance: '2.1 km',
-        isOpen: false,
-        openTime: '09:00 AM',
-        closeTime: '09:00 PM',
-        createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'pharmacy-4',
-        name: 'MedPlus Health Services',
-        phone: '+91-9876540104',
-        address: 'Sector 12, Demo Village',
-        licenseNumber: 'DL-PHR-004',
-        ownerName: 'Priya Singh',
-        location: { lat: 28.6110, lng: 77.2120 },
-        distance: '3.0 km',
-        isOpen: true,
-        openTime: '08:30 AM',
-        closeTime: '10:30 PM',
-        createdAt: new Date(Date.now() - 75 * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'pharmacy-5',
-        name: '1mg Tata Digital',
-        phone: '+91-9876540105',
-        address: 'Shopping Complex, Demo Village',
-        licenseNumber: 'DL-PHR-005',
-        ownerName: 'Amit Kumar',
-        location: { lat: 28.6160, lng: 77.2070 },
-        distance: '2.8 km',
-        isOpen: true,
-        openTime: '24/7',
-        closeTime: '24/7',
-        createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString()
-      }
-    ];
-
-    // Create dummy visits/appointments
-    const defaultVisits = [];
-
-    // Create dummy messages
-    const defaultMessages = [];
-
     // Set all default data
-    localStorage.setItem('medicines', JSON.stringify(defaultMedicines));
-    localStorage.setItem('users', JSON.stringify(defaultUsers));
-    localStorage.setItem('doctors', JSON.stringify(defaultDoctors));
+    localStorage.setItem('medicines', JSON.stringify(getDefaultMedicines()));
+    localStorage.setItem('users', JSON.stringify([]));
+    localStorage.setItem('doctors', JSON.stringify(getDefaultDoctors()));
     localStorage.setItem('ashas', JSON.stringify([]));
-    localStorage.setItem('patients', JSON.stringify(defaultPatients));
-    localStorage.setItem('healthRecords', JSON.stringify(defaultHealthRecords));
-    localStorage.setItem('messages', JSON.stringify(defaultMessages));
-    localStorage.setItem('prescriptions', JSON.stringify(defaultPrescriptions));
-    localStorage.setItem('visits', JSON.stringify(defaultVisits));
-    localStorage.setItem('orders', JSON.stringify(defaultOrders));
-    localStorage.setItem('pharmacies', JSON.stringify(defaultPharmacies));
+    localStorage.setItem('patients', JSON.stringify([]));
+    localStorage.setItem('healthRecords', JSON.stringify([]));
+    localStorage.setItem('messages', JSON.stringify([]));
+    localStorage.setItem('prescriptions', JSON.stringify([]));
+    localStorage.setItem('visits', JSON.stringify([]));
+    localStorage.setItem('orders', JSON.stringify([]));
+    localStorage.setItem('pharmacies', JSON.stringify(getDefaultPharmacies()));
     localStorage.setItem('otps', JSON.stringify([]));
     localStorage.setItem('session', JSON.stringify({ current: null }));
     localStorage.setItem('doctorStats', JSON.stringify({}));
@@ -378,10 +34,272 @@ export const initializeStorage = () => {
     localStorage.setItem('storageInitialized', 'true');
     
     console.log('Storage initialized successfully with clean data');
-    console.log('Demo user login: 1234567890');
   } catch (error) {
     console.error('Error initializing storage:', error);
   }
+};
+
+// Default data generators
+const getDefaultMedicines = () => {
+  return [
+    {
+      id: 'med-1',
+      name: 'Paracetamol',
+      company: 'Generic',
+      dosage: '500mg',
+      category: 'Pain Relief',
+      price: 25,
+      description: 'Used for fever and pain relief'
+    },
+    {
+      id: 'med-2',
+      name: 'Amoxicillin',
+      company: 'Generic',
+      dosage: '250mg',
+      category: 'Antibiotic',
+      price: 45,
+      description: 'Antibiotic for bacterial infections'
+    },
+    {
+      id: 'med-3',
+      name: 'Metformin',
+      company: 'Generic',
+      dosage: '500mg',
+      category: 'Diabetes',
+      price: 35,
+      description: 'Used for type 2 diabetes management'
+    },
+    {
+      id: 'med-4',
+      name: 'Omeprazole',
+      company: 'Generic',
+      dosage: '20mg',
+      category: 'Gastric',
+      price: 30,
+      description: 'Used for acid reflux and stomach ulcers'
+    },
+    {
+      id: 'med-5',
+      name: 'Atorvastatin',
+      company: 'Generic',
+      dosage: '10mg',
+      category: 'Cholesterol',
+      price: 50,
+      description: 'Used to lower cholesterol levels'
+    },
+    {
+      id: 'med-6',
+      name: 'Aspirin',
+      company: 'Bayer',
+      dosage: '75mg',
+      category: 'Blood Thinner',
+      price: 15,
+      description: 'Low-dose aspirin for heart protection'
+    },
+    {
+      id: 'med-7',
+      name: 'Losartan',
+      company: 'Generic',
+      dosage: '50mg',
+      category: 'Blood Pressure',
+      price: 40,
+      description: 'Used for high blood pressure'
+    },
+    {
+      id: 'med-8',
+      name: 'Vitamin D3',
+      company: 'HealthVit',
+      dosage: '1000 IU',
+      category: 'Vitamin',
+      price: 20,
+      description: 'Vitamin D supplement'
+    }
+  ];
+};
+
+const getDefaultDoctors = () => {
+  return [
+    {
+      id: 'doctor-demo-456',
+      name: 'Dr. Priya Sharma',
+      phone: '+91-9876540001',
+      specialization: 'General Medicine',
+      hospital: 'Primary Health Center',
+      experience: '8 years',
+      createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+};
+
+const getDefaultPharmacies = () => {
+  return [
+    {
+      id: 'pharmacy-1',
+      name: 'HealthCare Pharmacy',
+      phone: '+91-9876540101',
+      address: 'Main Market, Demo Village',
+      licenseNumber: 'DL-PHR-001',
+      ownerName: 'Suresh Gupta',
+      location: { lat: 28.6139, lng: 77.2090 },
+      distance: '0.5 km',
+      isOpen: true,
+      openTime: '08:00 AM',
+      closeTime: '10:00 PM',
+      createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'pharmacy-2',
+      name: 'City Medical Store',
+      phone: '+91-9876540102',
+      address: 'Hospital Road, Demo Village',
+      licenseNumber: 'DL-PHR-002',
+      ownerName: 'Meena Sharma',
+      location: { lat: 28.6129, lng: 77.2080 },
+      distance: '1.2 km',
+      isOpen: true,
+      openTime: '07:00 AM',
+      closeTime: '11:00 PM',
+      createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'pharmacy-3',
+      name: 'Apollo Pharmacy',
+      phone: '+91-9876540103',
+      address: 'Civil Lines, Demo Village',
+      licenseNumber: 'DL-PHR-003',
+      ownerName: 'Rajesh Verma',
+      location: { lat: 28.6149, lng: 77.2100 },
+      distance: '2.1 km',
+      isOpen: false,
+      openTime: '09:00 AM',
+      closeTime: '09:00 PM',
+      createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'pharmacy-4',
+      name: 'MedPlus Health Services',
+      phone: '+91-9876540104',
+      address: 'Sector 12, Demo Village',
+      licenseNumber: 'DL-PHR-004',
+      ownerName: 'Priya Singh',
+      location: { lat: 28.6110, lng: 77.2120 },
+      distance: '3.0 km',
+      isOpen: true,
+      openTime: '08:30 AM',
+      closeTime: '10:30 PM',
+      createdAt: new Date(Date.now() - 75 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'pharmacy-5',
+      name: '1mg Tata Digital',
+      phone: '+91-9876540105',
+      address: 'Shopping Complex, Demo Village',
+      licenseNumber: 'DL-PHR-005',
+      ownerName: 'Amit Kumar',
+      location: { lat: 28.6160, lng: 77.2070 },
+      distance: '2.8 km',
+      isOpen: true,
+      openTime: '24/7',
+      closeTime: '24/7',
+      createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+};
+
+// Generate default health records for any user
+export const generateDefaultHealthRecords = (userId) => {
+  return [
+    {
+      id: `record-${userId}-1`,
+      patientId: userId,
+      title: 'Blood Test Results',
+      notes: 'Complete blood count and lipid profile. All values within normal range.',
+      fileName: 'blood_test_report.pdf',
+      uploadedBy: userId,
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: `record-${userId}-2`,
+      patientId: userId,
+      title: 'X-Ray Chest',
+      notes: 'Routine chest X-ray. No abnormalities detected. Lungs clear.',
+      fileName: 'chest_xray.jpg',
+      uploadedBy: userId,
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: `record-${userId}-3`,
+      patientId: userId,
+      title: 'ECG Report',
+      notes: 'Electrocardiogram shows normal sinus rhythm. Heart rate: 72 bpm.',
+      fileName: 'ecg_report.pdf',
+      uploadedBy: userId,
+      createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+};
+
+// Generate default prescriptions for any user
+export const generateDefaultPrescriptions = (userId) => {
+  return [
+    {
+      id: `prescription-${userId}-1`,
+      patientId: userId,
+      doctorId: 'doctor-demo-456',
+      doctorName: 'Dr. Priya Sharma',
+      text: 'Metformin 500mg - Take twice daily after meals for diabetes management. Monitor blood sugar levels weekly.',
+      medicines: [
+        { name: 'Metformin', dosage: '500mg', frequency: 'Twice daily', duration: '30 days' }
+      ],
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: `prescription-${userId}-2`,
+      patientId: userId,
+      doctorId: 'doctor-demo-456',
+      doctorName: 'Dr. Priya Sharma',
+      text: 'Paracetamol 500mg for fever and pain. Take as needed, maximum 3 times per day.',
+      medicines: [
+        { name: 'Paracetamol', dosage: '500mg', frequency: 'As needed (max 4/day)', duration: '5 days' }
+      ],
+      createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+};
+
+// Generate default orders for any user
+export const generateDefaultOrders = (userId) => {
+  return [
+    {
+      id: `order-${userId}-1`,
+      userId: userId,
+      pharmacyId: 'pharmacy-1',
+      pharmacyName: 'HealthCare Pharmacy',
+      items: [
+        { medicineId: 'med-3', medicineName: 'Metformin', quantity: 2, price: 35 },
+        { medicineId: 'med-6', medicineName: 'Aspirin', quantity: 1, price: 15 }
+      ],
+      total: 85,
+      status: 'delivered',
+      deliveryAddress: 'Demo Village, PIN: 123456',
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      deliveredAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: `order-${userId}-2`,
+      userId: userId,
+      pharmacyId: 'pharmacy-2',
+      pharmacyName: 'City Medical Store',
+      items: [
+        { medicineId: 'med-1', medicineName: 'Paracetamol', quantity: 3, price: 25 }
+      ],
+      total: 75,
+      status: 'shipped',
+      deliveryAddress: 'Demo Village, PIN: 123456',
+      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      shippedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString()
+    }
+  ];
 };
 
 // Generic storage helpers
@@ -439,19 +357,8 @@ export const createUser = (userData) => {
     users.push(newUser);
     writeStorage('users', users);
     
-    // Also create a patient record for the user
-    const patientData = {
-      id: newUser.id,
-      name: newUser.name,
-      age: newUser.age || 'Not specified',
-      phone: newUser.phone,
-      village: newUser.village || 'Not specified',
-      ownerRole: 'user',
-      ownerId: newUser.id,
-      registeredBy: 'self',
-      createdAt: new Date().toISOString()
-    };
-    createPatient(patientData);
+    // Create default data for the new user
+    initializeUserData(newUser.id);
     
     return { success: true, user: newUser };
   } catch (error) {
@@ -460,10 +367,63 @@ export const createUser = (userData) => {
   }
 };
 
+// Initialize default data for a user
+export const initializeUserData = (userId) => {
+  try {
+    // Create patient record
+    const patientData = {
+      id: userId,
+      name: 'User', // Will be updated when user data is available
+      age: 'Not specified',
+      phone: 'Not specified',
+      village: 'Not specified',
+      ownerRole: 'user',
+      ownerId: userId,
+      registeredBy: 'self',
+      createdAt: new Date().toISOString()
+    };
+    createPatient(patientData);
+
+    // Create default health records
+    const defaultHealthRecords = generateDefaultHealthRecords(userId);
+    defaultHealthRecords.forEach(record => {
+      createHealthRecord(record);
+    });
+
+    // Create default prescriptions
+    const defaultPrescriptions = generateDefaultPrescriptions(userId);
+    defaultPrescriptions.forEach(prescription => {
+      createPrescription(prescription);
+    });
+
+    // Create default orders
+    const defaultOrders = generateDefaultOrders(userId);
+    defaultOrders.forEach(order => {
+      createOrder(order);
+    });
+
+    console.log(`Default data initialized for user: ${userId}`);
+    return true;
+  } catch (error) {
+    console.error('Error initializing user data:', error);
+    return false;
+  }
+};
+
 export const getUserByPhone = (phone) => {
   try {
     const users = readStorage('users', []);
-    return users.find(user => user.phone === phone);
+    const user = users.find(user => user.phone === phone);
+    
+    // If user exists but doesn't have default data, initialize it
+    if (user) {
+      const healthRecords = getHealthRecordsByPatient(user.id);
+      if (healthRecords.length === 0) {
+        initializeUserData(user.id);
+      }
+    }
+    
+    return user;
   } catch (error) {
     console.error('Error getting user by phone:', error);
     return null;
@@ -586,7 +546,20 @@ export const createHealthRecord = (recordData) => {
 export const getHealthRecordsByPatient = (patientId) => {
   try {
     const records = readStorage('healthRecords', []);
-    return records.filter(record => record.patientId === patientId);
+    const userRecords = records.filter(record => record.patientId === patientId);
+    
+    // If no records found and this is a valid user, ensure default data exists
+    if (userRecords.length === 0 && patientId) {
+      const users = readStorage('users', []);
+      const userExists = users.find(user => user.id === patientId);
+      if (userExists) {
+        initializeUserData(patientId);
+        // Return the newly created records
+        return readStorage('healthRecords', []).filter(record => record.patientId === patientId);
+      }
+    }
+    
+    return userRecords;
   } catch (error) {
     console.error('Error getting health records by patient:', error);
     return [];
@@ -642,7 +615,20 @@ export const createPrescription = (prescriptionData) => {
 export const getPrescriptionsByPatient = (patientId) => {
   try {
     const prescriptions = readStorage('prescriptions', []);
-    return prescriptions.filter(prescription => prescription.patientId === patientId);
+    const userPrescriptions = prescriptions.filter(prescription => prescription.patientId === patientId);
+    
+    // If no prescriptions found and this is a valid user, ensure default data exists
+    if (userPrescriptions.length === 0 && patientId) {
+      const users = readStorage('users', []);
+      const userExists = users.find(user => user.id === patientId);
+      if (userExists) {
+        initializeUserData(patientId);
+        // Return the newly created prescriptions
+        return readStorage('prescriptions', []).filter(prescription => prescription.patientId === patientId);
+      }
+    }
+    
+    return userPrescriptions;
   } catch (error) {
     console.error('Error getting prescriptions by patient:', error);
     return [];
