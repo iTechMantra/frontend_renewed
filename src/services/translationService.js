@@ -1,8 +1,8 @@
 // src/services/translationService.js
 
-// Translation dictionary for English to Punjabi
+// Translation dictionary for English → Punjabi
 const translations = {
-  // Common words
+  // Common
   'Welcome': 'ਸੁਆਗਤ ਹੈ',
   'Login': 'ਲੌਗਇਨ',
   'Sign up': 'ਸਾਇਨ ਅੱਪ',
@@ -21,7 +21,7 @@ const translations = {
   'Success': 'ਸਫਲਤਾ',
   'Loading': 'ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ',
   'Please wait': 'ਕਿਰਪਾ ਕਰਕੇ ਇੰਤਜ਼ਾਰ ਕਰੋ',
-  
+
   // Navigation
   'Dashboard': 'ਡੈਸ਼ਬੋਰਡ',
   'Messages': 'ਸੰਦੇਸ਼',
@@ -35,255 +35,113 @@ const translations = {
   'Statistics': 'ਆਂਕੜੇ',
   'Campaign': 'ਮੁਹਿੰਮ',
   'Add Patient': 'ਮਰੀਜ਼ ਜੋੜੋ',
-  
+
   // User types
   'User': 'ਉਪਯੋਗਕਰਤਾ',
   'Doctor': 'ਡਾਕਟਰ',
   'ASHA Worker': 'ਆਸ਼ਾ ਵਰਕਰ',
   'Pharmacy': 'ਦਵਾਈਖਾਨਾ',
-  
-  // Medical terms
-  'Symptoms': 'ਲੱਛਣ',
-  'Diagnosis': 'ਨਿਦਾਨ',
-  'Treatment': 'ਇਲਾਜ',
-  'Medicine': 'ਦਵਾਈ',
-  'Dosage': 'ਮਾਤਰਾ',
-  'Price': 'ਕੀਮਤ',
-  'Company': 'ਕੰਪਨੀ',
-  'Category': 'ਸ਼੍ਰੇਣੀ',
-  
-  // Actions
-  'Attend': 'ਧਿਆਨ ਦਿਓ',
-  'Complete': 'ਪੂਰਾ ਕਰੋ',
-  'View': 'ਦੇਖੋ',
-  'Edit': 'ਸੰਪਾਦਿਤ ਕਰੋ',
-  'Delete': 'ਮਿਟਾਓ',
-  'Download': 'ਡਾਊਨਲੋਡ',
-  'Upload': 'ਅਪਲੋਡ',
-  'Send': 'ਭੇਜੋ',
-  'Receive': 'ਪ੍ਰਾਪਤ ਕਰੋ',
-  
-  // Time
-  'Today': 'ਅੱਜ',
-  'Yesterday': 'ਕੱਲ',
-  'Tomorrow': 'ਕੱਲ',
-  'Just now': 'ਹੁਣੇ',
-  'min ago': 'ਮਿੰਟ ਪਹਿਲਾਂ',
-  'hr ago': 'ਘੰਟਾ ਪਹਿਲਾਂ',
-  'ago': 'ਪਹਿਲਾਂ',
-  
-  // Status
-  'Pending': 'ਲੰਬਿਤ',
-  'In Progress': 'ਤਰੱਕੀ ਵਿੱਚ',
-  'Completed': 'ਪੂਰਾ',
-  'Cancelled': 'ਰੱਦ',
-  'Active': 'ਸਰਗਰਮ',
-  'Inactive': 'ਨਿਸ਼ਕ੍ਰਿਆ',
-  
-  // Common phrases
-  'Don\'t have an account?': 'ਖਾਤਾ ਨਹੀਂ ਹੈ?',
-  'Already have an account?': 'ਖਾਤਾ ਪਹਿਲਾਂ ਤੋਂ ਹੈ?',
-  'Enter your': 'ਆਪਣਾ ਦਰਜ ਕਰੋ',
-  'Please enter': 'ਕਿਰਪਾ ਕਰਕੇ ਦਰਜ ਕਰੋ',
-  'Enter': 'ਦਰਜ ਕਰੋ',
-  'Select': 'ਚੁਣੋ',
-  'Choose': 'ਚੁਣੋ',
-  
-  // E-Sannidhi specific
-  'E-Sannidhi': 'ਈ-ਸਨਿਧੀ',
-  'Government of India Initiative': 'ਭਾਰਤ ਸਰਕਾਰ ਦੀ ਪਹਿਲਕਦਮੀ',
-  'Telemedicine': 'ਟੈਲੀਵੈੱਡੀਸਨ',
+
+  // E-Sannidhi / Landing page
   'Healthcare': 'ਸਿਹਤ ਸੇਵਾ',
   'Community Health': 'ਭਾਈਚਾਰਕ ਸਿਹਤ',
   'AI Symptom Checker': 'AI ਲੱਛਣ ਚੈਕਰ',
   'Medicine Delivery': 'ਦਵਾਈ ਡਿਲੀਵਰੀ',
-  'Video Consultation': 'ਵੀਡੀਓ ਸਲਾਹ',
-  'Health Records': 'ਸਿਹਤ ਰਿਕਾਰਡ',
+  'Video Consultations': 'ਵੀਡੀਓ ਸਲਾਹ',
+  'Digital Health Records': 'ਸਿਹਤ ਰਿਕਾਰਡ',
   'Prescription Management': 'ਪ੍ਰੈਸਕ੍ਰਿਪਸ਼ਨ ਪ੍ਰਬੰਧਨ',
-  
-  // Form labels
-  'Full Name': 'ਪੂਰਾ ਨਾਮ',
-  'Mobile Number': 'ਮੋਬਾਈਲ ਨੰਬਰ',
-  'Email': 'ਈਮੇਲ',
-  'Password': 'ਪਾਸਵਰਡ',
-  'Confirm Password': 'ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ',
-  'Address': 'ਪਤਾ',
-  'Location': 'ਟਿਕਾਣਾ',
-  'Specialization': 'ਮਾਹਿਰਗੀ',
-  'License Number': 'ਲਾਇਸੰਸ ਨੰਬਰ',
-  'Aadhaar Number': 'ਆਧਾਰ ਨੰਬਰ',
-  
-  // Messages
-  'Login successful': 'ਲੌਗਇਨ ਸਫਲ',
-  'Registration successful': 'ਰਜਿਸਟ੍ਰੀਕਰਨ ਸਫਲ',
-  'Logout successful': 'ਲੌਗਆਉਟ ਸਫਲ',
-  'OTP sent successfully': 'OTP ਸਫਲਤਾਪੂਰਵਕ ਭੇਜਿਆ ਗਿਆ',
-  'OTP verified successfully': 'OTP ਸਫਲਤਾਪੂਰਵਕ ਤਸਦੀਕ ਹੋਇਆ',
-  'Invalid OTP': 'ਗਲਤ OTP',
-  'OTP expired': 'OTP ਦੀ ਮਿਆਦ ਸਮਾਪਤ',
-  'User not found': 'ਉਪਯੋਗਕਰਤਾ ਨਹੀਂ ਮਿਲਿਆ',
-  'Invalid credentials': 'ਗਲਤ ਸਨਦ',
-  'Password required': 'ਪਾਸਵਰਡ ਚਾਹੀਦਾ ਹੈ',
-  'Phone required': 'ਫੋਨ ਚਾਹੀਦਾ ਹੈ',
-  'Name required': 'ਨਾਮ ਚਾਹੀਦਾ ਹੈ',
-  
-  // Dashboard specific
-  'Welcome back': 'ਵਾਪਸ ਸੁਆਗਤ ਹੈ',
-  'Total Patients': 'ਕੁੱਲ ਮਰੀਜ਼',
-  'Waiting': 'ਇੰਤਜ਼ਾਰ',
-  'Attended': 'ਧਿਆਨ ਦਿੱਤਾ',
-  'Health Records': 'ਸਿਹਤ ਰਿਕਾਰਡ',
-  'Prescriptions': 'ਪ੍ਰੈਸਕ੍ਰਿਪਸ਼ਨ',
-  'Orders': 'ਆਰਡਰ',
-  'Patients Added': 'ਮਰੀਜ਼ ਜੋੜੇ ਗਏ',
-  'Campaign Progress': 'ਮੁਹਿੰਮ ਤਰੱਕੀ',
-  
-  // Medicine related
-  'Medicine Details': 'ਦਵਾਈ ਵੇਰਵੇ',
-  'Add to Cart': 'ਕਾਰਟ ਵਿੱਚ ਜੋੜੋ',
-  'View Cart': 'ਕਾਰਟ ਦੇਖੋ',
-  'Place Order': 'ਆਰਡਰ ਦਿਓ',
-  'Order Summary': 'ਆਰਡਰ ਸਾਰ',
-  'Total': 'ਕੁੱਲ',
-  'Quantity': 'ਮਾਤਰਾ',
-  'Price': 'ਕੀਮਤ',
-  'each': 'ਹਰੇਕ',
-  'Delivery': 'ਡਿਲੀਵਰੀ',
-  'Track': 'ਟ੍ਰੈਕ ਕਰੋ',
-  
-  // Video call
-  'Start Video Call': 'ਵੀਡੀਓ ਕਾਲ ਸ਼ੁਰੂ ਕਰੋ',
-  'End Call': 'ਕਾਲ ਖਤਮ ਕਰੋ',
-  'Join Meeting': 'ਮੀਟਿੰਗ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ',
-  'Leave Meeting': 'ਮੀਟਿੰਗ ਛੋੜੋ',
-  'Microphone': 'ਮਾਈਕ੍ਰੋਫੋਨ',
-  'Camera': 'ਕੈਮਰਾ',
-  'Screen Share': 'ਸਕ੍ਰੀਨ ਸਾਂਝੀ',
-  
-  // Chat
-  'Type your message': 'ਆਪਣਾ ਸੰਦੇਸ਼ ਟਾਈਪ ਕਰੋ',
-  'Send Message': 'ਸੰਦੇਸ਼ ਭੇਜੋ',
-  'No messages yet': 'ਹਾਲੇ ਕੋਈ ਸੰਦੇਸ਼ ਨਹੀਂ',
-  'Start a conversation': 'ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ',
-  'Create Visit': 'ਮੁਲਾਕਾਤ ਬਣਾਓ',
-  'Visit created successfully': 'ਮੁਲਾਕਾਤ ਸਫਲਤਾਪੂਰਵਕ ਬਣੀ',
-  'Visit ID': 'ਮੁਲਾਕਾਤ ID',
-  
-  // Forms
-  'Required': 'ਜ਼ਰੂਰੀ',
-  'Optional': 'ਵਿਕਲਪਿਕ',
-  'Choose file': 'ਫਾਈਲ ਚੁਣੋ',
-  'No file chosen': 'ਕੋਈ ਫਾਈਲ ਨਹੀਂ ਚੁਣੀ',
-  'Upload file': 'ਫਾਈਲ ਅਪਲੋਡ ਕਰੋ',
-  'File uploaded': 'ਫਾਈਲ ਅਪਲੋਡ ਹੋਈ',
-  'Upload failed': 'ਅਪਲੋਡ ਅਸਫਲ',
-  
-  // Status messages
-  'Online': 'ਔਨਲਾਈਨ',
-  'Offline': 'ਔਫਲਾਈਨ',
-  'Connecting': 'ਜੁੜ ਰਿਹਾ ਹੈ',
-  'Connected': 'ਜੁੜਿਆ ਹੋਇਆ',
-  'Disconnected': 'ਡਿਸਕਨੈਕਟ',
-  'Reconnecting': 'ਫਿਰ ਜੁੜ ਰਿਹਾ ਹੈ',
-  
-  // Common actions
-  'Click here': 'ਇੱਥੇ ਕਲਿੱਕ ਕਰੋ',
-  'Learn more': 'ਹੋਰ ਜਾਣੋ',
-  'Read more': 'ਹੋਰ ਪੜ੍ਹੋ',
-  'Show more': 'ਹੋਰ ਦਿਖਾਓ',
-  'Show less': 'ਕਮ ਦਿਖਾਓ',
-  'View all': 'ਸਭ ਦੇਖੋ',
-} 
+
+  // Hero section
+  'Healthcare Reimagined': 'ਸਿਹਤ ਸੇਵਾ ਦਾ ਨਵਾਂ ਰੂਪ',
+  'Connecting patients, doctors, ASHA workers, and pharmacies through cutting-edge telemedicine technology. Experience healthcare that\'s accessible, affordable.':
+      'ਮਰੀਜ਼, ਡਾਕਟਰ, ASHA ਵਰਕਰ ਅਤੇ ਫਾਰਮਸੀਜ਼ ਨੂੰ ਉੱਚ ਤਕਨੀਕ ਵਾਲੀ ਟੈਲੀਮੇਡੀਸਨ ਦੁਆਰਾ ਜੋੜਨਾ। ਸਿਹਤ ਸੇਵਾਵਾਂ ਹੁਣ ਸਹੂਲਤਯੋਗ ਅਤੇ ਕਿਫ਼ਾਇਤੀ ਹਨ।',
+  'Secure & Private': 'ਸੁਰੱਖਿਅਤ ਅਤੇ ਪ੍ਰਾਈਵੇਟ',
+  '24/7 Available': '24/7 ਉਪਲਬਧ',
+  'Community Care': 'ਕਮਿਊਨਿਟੀ ਕੇਅਰ',
+  'Get Started Today': 'ਅੱਜ ਹੀ ਸ਼ੁਰੂ ਕਰੋ',
+  'Learn More': 'ਹੋਰ ਜਾਣੋ',
+
+  // How it works
+  'How It Works': 'ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ',
+  'Simple steps to access healthcare anywhere': 'ਕਿਤੇ ਵੀ ਸਿਹਤ ਸੇਵਾ ਤੱਕ ਪਹੁੰਚ ਦੇ ਲਈ ਸਧਾਰਣ ਕਦਮ',
+  'Step 1: Register': 'ਕਦਮ 1: ਰਜਿਸਟਰ ਕਰੋ',
+  'Sign up as a patient, doctor, ASHA, or pharmacy to access the platform': 'ਪਲੇਟਫਾਰਮ ਤੱਕ ਪਹੁੰਚ ਲਈ ਮਰੀਜ਼, ਡਾਕਟਰ, ASHA ਜਾਂ ਫਾਰਮਸੀ ਵਜੋਂ ਸਾਈਨ ਅੱਪ ਕਰੋ',
+  'Step 2: Consult / Upload': 'ਕਦਮ 2: ਸਲਾਹ / ਅਪਲੋਡ ਕਰੋ',
+  'Patients can consult doctors, upload health records, and track symptoms': 'ਮਰੀਜ਼ ਡਾਕਟਰਾਂ ਨਾਲ ਸਲਾਹ-ਮਸ਼ਵਰਾ ਕਰ ਸਕਦੇ ਹਨ, ਸਿਹਤ ਰਿਕਾਰਡ ਅਪਲੋਡ ਕਰ ਸਕਦੇ ਹਨ ਅਤੇ ਲੱਛਣ ਟ੍ਰੈਕ ਕਰ ਸਕਦੇ ਹਨ',
+  'Step 3: Get Medicines': 'ਕਦਮ 3: ਦਵਾਈ ਪ੍ਰਾਪਤ ਕਰੋ',
+  'Order medicines online or visit nearby pharmacies for delivery': 'ਆਨਲਾਈਨ ਦਵਾਈਆਂ ਆਰਡਰ ਕਰੋ ਜਾਂ ਨੇੜਲੇ ਫਾਰਮਸੀ ਤੋਂ ਡਿਲੀਵਰੀ ਪ੍ਰਾਪਤ ਕਰੋ',
+
+  // Features
+  'Comprehensive Healthcare Solutions': 'ਵਿਆਪਕ ਸਿਹਤ ਸੇਵਾ ਹੱਲ',
+  'Our platform offers a complete suite of healthcare services designed to make quality medical care accessible to everyone, anywhere, anytime.':
+      'ਸਾਡਾ ਪਲੇਟਫਾਰਮ ਹਰ ਕੋਈ, ਕਿਤੇ ਵੀ, ਕਿਸੇ ਵੀ ਸਮੇਂ ਗੁਣਵੱਤਾ ਵਾਲੀ ਮੈਡੀਕਲ ਸੇਵਾ ਤੱਕ ਪਹੁੰਚਯੋਗ ਬਣਾਉਂਦਾ ਹੈ',
+  'AI Symptom Checker': 'AI ਲੱਛਣ ਚੈਕਰ',
+  'Advanced AI analyzes symptoms and provides preliminary health assessments with high accuracy.':
+      'ਉੱਚ-ਗੁਣਵੱਤਾ ਵਾਲਾ AI ਲੱਛਣਾਂ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰਦਾ ਹੈ ਅਤੇ ਪ੍ਰਾਰੰਭਿਕ ਸਿਹਤ ਮੁਲਾਂਕਣ ਪ੍ਰਦਾਨ ਕਰਦਾ ਹੈ',
+  'Video Consultations': 'ਵੀਡੀਓ ਸਲਾਹ',
+  'Secure, high-quality video calls with certified doctors from the comfort of your home.':
+      'ਸਰਟੀਫਾਈਡ ਡਾਕਟਰਾਂ ਨਾਲ ਘਰ ਬੈਠੇ ਸੁਖਦਾਈ, ਉੱਚ-ਗੁਣਵੱਤਾ ਵਾਲੀਆਂ ਵੀਡੀਓ ਕਾਲਾਂ',
+  'Digital Health Records': 'ਸਿਹਤ ਰਿਕਾਰਡ',
+  'Centralized, encrypted health records accessible to you and your healthcare providers.':
+      'ਕੇਂਦਰਿਤ, ਗੁਪਤ ਸਿਹਤ ਰਿਕਾਰਡ, ਜੋ ਤੁਹਾਨੂੰ ਅਤੇ ਤੁਹਾਡੇ ਹੈਲਥਕੇਅਰ ਪ੍ਰਦਾਤਾਵਾਂ ਲਈ ਉਪਲਬਧ ਹਨ',
+  'Medicine Delivery': 'ਦਵਾਈ ਡਿਲੀਵਰੀ',
+  'Fast, reliable delivery of prescribed medications directly to your doorstep.':
+      'ਤੁਰੰਤ ਅਤੇ ਭਰੋਸੇਯੋਗ ਦਵਾਈ ਡਿਲੀਵਰੀ ਸਿੱਧੇ ਤੁਹਾਡੇ ਦਰਵਾਜੇ ਤੱਕ',
+  'Community Health': 'ਭਾਈਚਾਰਕ ਸਿਹਤ',
+  'Connect with local ASHA workers and participate in community health programs.':
+      'ਸਥਾਨਕ ASHA ਵਰਕਰਾਂ ਨਾਲ ਜੁੜੋ ਅਤੇ ਭਾਈਚਾਰਕ ਸਿਹਤ ਪ੍ਰੋਗਰਾਮਾਂ ਵਿੱਚ ਭਾਗ ਲਓ',
+  '24/7 Support': '24/7 ਸਹਾਇਤਾ',
+  'Round-the-clock customer support and emergency assistance when you need it most.':
+      'ਜਦੋਂ ਤੁਹਾਨੂੰ ਸਭ ਤੋਂ ਜ਼ਿਆਦਾ ਲੋੜ ਹੋਵੇ, ਚੋਣ-ਪ੍ਰਦਾਨ ਸਹਾਇਤਾ ਅਤੇ ਐਮਰਜੈਂਸੀ ਸਹਾਇਤਾ',
+
+  // Roles
+  'Choose Your Role': 'ਆਪਣਾ ਰੋਲ ਚੁਣੋ',
+  'Select your role to access personalized features and tools designed specifically for your healthcare needs.':
+      'ਆਪਣੀ ਸਿਹਤ ਸੇਵਾ ਦੀਆਂ ਜ਼ਰੂਰਤਾਂ ਲਈ ਵਿਸ਼ੇਸ਼ ਤੌਰ ਤੇ ਡਿਜ਼ਾਈਨ ਕੀਤੀਆਂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਅਤੇ ਟੂਲਾਂ ਤੱਕ ਪਹੁੰਚ ਲਈ ਰੋਲ ਚੁਣੋ',
+  'Patient': 'ਮਰੀਜ਼',
+  'Book consultations, access health records, and get AI-powered symptom analysis.':
+      'ਸਲਾਹ-ਮਸ਼ਵਰਾ ਬੁੱਕ ਕਰੋ, ਸਿਹਤ ਰਿਕਾਰਡ ਤੱਕ ਪਹੁੰਚ ਕਰੋ, ਅਤੇ AI ਲੱਛਣ ਵਿਸ਼ਲੇਸ਼ਣ ਪ੍ਰਾਪਤ ਕਰੋ',
+  'Doctor': 'ਡਾਕਟਰ',
+  'Conduct video consultations, manage patient records, and provide expert care.':
+      'ਵੀਡੀਓ ਸਲਾਹ-ਮਸ਼ਵਰਾ ਕਰੋ, ਮਰੀਜ਼ ਰਿਕਾਰਡ ਪ੍ਰਬੰਧਿਤ ਕਰੋ, ਅਤੇ ਵਿਸ਼ੇਸ਼ ਤਜਰਬੇ ਵਾਲੀ ਦੇਖਭਾਲ ਦਿਓ',
+  'ASHA Worker': 'ਆਸ਼ਾ ਵਰਕਰ',
+  'Support community health initiatives and coordinate patient care.':
+      'ਭਾਈਚਾਰਕ ਸਿਹਤ ਪ੍ਰਯਾਸਾਂ ਨੂੰ ਸਹਾਇਤਾ ਦਿਓ ਅਤੇ ਮਰੀਜ਼ ਦੇਖਭਾਲ ਨੂੰ ਕੋਆਰਡੀਨੇਟ ਕਰੋ',
+  'Pharmacy': 'ਫਾਰਮਸੀ',
+  'Manage prescriptions, provide medicine delivery, and track inventory.':
+      'ਪ੍ਰੈਸਕ੍ਰਿਪਸ਼ਨ ਪ੍ਰਬੰਧਿਤ ਕਰੋ, ਦਵਾਈ ਡਿਲੀਵਰੀ ਕਰੋ, ਅਤੇ ਇਨਵੈਂਟਰੀ ਟ੍ਰੈਕ ਕਰੋ',
+  'Get Started →': 'ਸ਼ੁਰੂ ਕਰੋ →'
+};
 
 // Initialize translations
 export const initializeTranslations = () => {
-  // This function can be used to load translations from an external source
-  // For now, we'll use the static dictionary above
   console.log('Translations initialized');
 };
 
-// Create reverse translation dictionary (Punjabi to English)
-const reverseTranslations = {};
-Object.keys(translations).forEach(key => {
-  reverseTranslations[translations[key]] = key;
-});
+// Language helpers
+export const setLanguage = (langCode) => {
+  localStorage.setItem('appLanguage', langCode);
+};
 
-// Translate text from English to Punjabi or vice versa
+export const getCurrentLanguage = () => {
+  return localStorage.getItem('appLanguage') || 'en';
+};
+
+export const getToggleLanguage = () => (getCurrentLanguage() === 'en' ? 'pa' : 'en');
+
+export const getToggleLanguageName = () => (getCurrentLanguage() === 'en' ? 'ਪੰਜਾਬੀ' : 'English');
+
+// Main translation function
 export const translate = (text) => {
-  try {
-    // Get current language setting
-    const currentLang = localStorage.getItem('appLanguage') || 'en';
-    
-    // If English, return original text or English translation
-    if (currentLang === 'en') {
-      // If text is in Punjabi, translate back to English
-      if (reverseTranslations[text]) {
-        return reverseTranslations[text];
-      }
-      // Otherwise return original text
-      return text;
-    }
-    
-    // If Punjabi, return Punjabi translation
-    if (translations[text]) {
-      return translations[text];
-    }
-    
-    // If no translation found, return original text
-    return text;
-  } catch (error) {
-    console.error('Error translating text:', error);
-    return text;
+  const lang = getCurrentLanguage();
+  if (lang === 'pa') {
+    return translations[text] || text;
   }
+  return text;
 };
 
 // Get all available languages
-export const getAvailableLanguages = () => {
-  return [
-    { code: 'en', name: 'English', nativeName: 'English' },
-    { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ' }
-  ];
-};
-
-// Set application language
-export const setLanguage = (langCode) => {
-  try {
-    localStorage.setItem('appLanguage', langCode);
-    return true;
-  } catch (error) {
-    console.error('Error setting language:', error);
-    return false;
-  }
-};
-
-// Get current language
-export const getCurrentLanguage = () => {
-  try {
-    return localStorage.getItem('appLanguage') || 'en';
-  } catch (error) {
-    console.error('Error getting current language:', error);
-    return 'en';
-  }
-};
-
-// Get the opposite language for toggle button
-export const getToggleLanguage = () => {
-  try {
-    const currentLang = getCurrentLanguage();
-    return currentLang === 'en' ? 'pa' : 'en';
-  } catch (error) {
-    console.error('Error getting toggle language:', error);
-    return 'pa';
-  }
-};
-
-// Get the display name for the toggle button
-export const getToggleLanguageName = () => {
-  try {
-    const currentLang = getCurrentLanguage();
-    return currentLang === 'en' ? 'ਪੰਜਾਬੀ' : 'English';
-  } catch (error) {
-    console.error('Error getting toggle language name:', error);
-    return 'ਪੰਜਾਬੀ';
-  }
-};
+export const getAvailableLanguages = () => [
+  { code: 'en', name: 'English', nativeName: 'English' },
+  { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ' },
+];
