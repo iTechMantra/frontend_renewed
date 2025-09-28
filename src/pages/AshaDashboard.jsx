@@ -95,22 +95,6 @@ export default function AshaDashboard() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Top Navbar */}
-      <header className="bg-white shadow-md flex justify-between items-center px-6 py-3">
-        
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600">
-            {translate('Welcome')}, {asha.name}
-          </span>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
-          >
-            {translate('Logout')}
-          </button>
-        </div>
-      </header>
-
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <div className="w-64 bg-white shadow-xl flex flex-col">
