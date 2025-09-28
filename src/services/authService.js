@@ -1,9 +1,12 @@
 // src/services/authService.js
-import { createUser, getUserByPhone, createDoctor, getDoctorByPhone, createAsha, getAshaByPhone } from './storageService';
+import { 
+  createUser, getUserByPhone,
+  createDoctor, getDoctorByPhone,
+  createAsha, getAshaByPhone,
+  createPharmacy, getPharmacyByPhone
+} from './storageService';
 
-// -----------------------------
-// Session management
-// -----------------------------
+// --------------------- SESSION MANAGEMENT ---------------------
 export const setCurrentSession = (session) => {
   try {
     localStorage.setItem('session', JSON.stringify(session));
@@ -24,49 +27,21 @@ export const getCurrentSession = () => {
   }
 };
 
-// -----------------------------
-// Set & Get Current User / Role
-// -----------------------------
-export const setCurrentUser = (user) => {
-  try {
-    const session = getCurrentSession();
-    session.current = { ...session.current, id: user.id, name: user.name };
-    localStorage.setItem('session', JSON.stringify(session));
-    return true;
-  } catch (error) {
-    console.error('Error setting current user:', error);
-    return false;
-  }
-};
-
-export const setCurrentRole = (role) => {
-  try {
-    const session = getCurrentSession();
-    session.current = { ...session.current, role };
-    localStorage.setItem('session', JSON.stringify(session));
-    return true;
-  } catch (error) {
-    console.error('Error setting current role:', error);
-    return false;
-  }
-};
-
 export const getCurrentUser = () => {
   try {
     const session = getCurrentSession();
     if (!session.current) return null;
-
     const { role, id } = session.current;
+
     switch (role) {
       case 'user':
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        return users.find(u => u.id === id);
+        return (JSON.parse(localStorage.getItem('users') || '[]')).find(u => u.id === id);
       case 'doctor':
-        const doctors = JSON.parse(localStorage.getItem('doctors') || '[]');
-        return doctors.find(d => d.id === id);
+        return (JSON.parse(localStorage.getItem('doctors') || '[]')).find(d => d.id === id);
       case 'asha':
-        const ashas = JSON.parse(localStorage.getItem('ashas') || '[]');
-        return ashas.find(a => a.id === id);
+        return (JSON.parse(localStorage.getItem('ashas') || '[]')).find(a => a.id === id);
+      case 'pharmacy':
+        return (JSON.parse(localStorage.getItem('pharmacies') || '[]')).find(p => p.id === id);
       default:
         return null;
     }
@@ -96,9 +71,7 @@ export const isAuthenticated = () => {
   }
 };
 
-// -----------------------------
-// Login & Register
-// -----------------------------
+// --------------------- USER ---------------------
 export const loginUser = (phone, password) => {
   try {
     const user = getUserByPhone(phone);
@@ -115,8 +88,7 @@ export const loginUser = (phone, password) => {
 
 export const registerUser = (userData) => {
   try {
-    const existing = getUserByPhone(userData.phone);
-    if (existing) return { success: false, error: 'User already exists' };
+    if (getUserByPhone(userData.phone)) return { success: false, error: 'User already exists' };
     return createUser(userData);
   } catch (error) {
     console.error('Error registering user:', error);
@@ -124,6 +96,7 @@ export const registerUser = (userData) => {
   }
 };
 
+// --------------------- DOCTOR ---------------------
 export const loginDoctor = (phone, password) => {
   try {
     const doctor = getDoctorByPhone(phone);
@@ -140,8 +113,7 @@ export const loginDoctor = (phone, password) => {
 
 export const registerDoctor = (doctorData) => {
   try {
-    const existing = getDoctorByPhone(doctorData.phone);
-    if (existing) return { success: false, error: 'Doctor already exists' };
+    if (getDoctorByPhone(doctorData.phone)) return { success: false, error: 'Doctor already exists' };
     return createDoctor(doctorData);
   } catch (error) {
     console.error('Error registering doctor:', error);
@@ -149,10 +121,11 @@ export const registerDoctor = (doctorData) => {
   }
 };
 
+// --------------------- ASHA ---------------------
 export const loginAsha = (phone, password) => {
   try {
     const asha = getAshaByPhone(phone);
-    if (!asha) return { success: false, error: 'ASHA not found' };
+    if (!asha) return { success: false, error: 'ASHA worker not found' };
     if (asha.password !== password) return { success: false, error: 'Invalid password' };
 
     setCurrentSession({ current: { role: 'asha', id: asha.id, name: asha.name, loggedAt: new Date().toISOString() } });
@@ -165,8 +138,7 @@ export const loginAsha = (phone, password) => {
 
 export const registerAsha = (ashaData) => {
   try {
-    const existing = getAshaByPhone(ashaData.phone);
-    if (existing) return { success: false, error: 'ASHA already exists' };
+    if (getAshaByPhone(ashaData.phone)) return { success: false, error: 'ASHA worker already exists' };
     return createAsha(ashaData);
   } catch (error) {
     console.error('Error registering ASHA:', error);
@@ -174,9 +146,31 @@ export const registerAsha = (ashaData) => {
   }
 };
 
-// -----------------------------
-// Logout
-// -----------------------------
+// --------------------- PHARMACY ---------------------
+export const loginPharmacy = (phone) => {
+  try {
+    const pharmacy = getPharmacyByPhone(phone);
+    if (!pharmacy) return { success: false, error: 'Pharmacy not found' };
+
+    setCurrentSession({ current: { role: 'pharmacy', id: pharmacy.id, name: pharmacy.name, loggedAt: new Date().toISOString() } });
+    return { success: true, user: pharmacy };
+  } catch (error) {
+    console.error('Error logging in pharmacy:', error);
+    return { success: false, error: 'Login failed' };
+  }
+};
+
+export const registerPharmacy = (pharmacyData) => {
+  try {
+    if (getPharmacyByPhone(pharmacyData.phone)) return { success: false, error: 'Pharmacy already exists' };
+    return createPharmacy(pharmacyData);
+  } catch (error) {
+    console.error('Error registering pharmacy:', error);
+    return { success: false, error: 'Registration failed' };
+  }
+};
+
+// --------------------- LOGOUT ---------------------
 export const logout = () => {
   try {
     setCurrentSession({ current: null });

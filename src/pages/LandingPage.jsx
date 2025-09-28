@@ -46,7 +46,7 @@ export default function LandingPage() {
       case 'user': navigate('/user/login'); break;
       case 'doctor': navigate('/doctor/login'); break;
       case 'asha': navigate('/asha/login'); break;
-      case 'pharmacy': navigate('/pharmacy'); break;
+      case 'pharmacy': navigate('/pharmacy/dashboard'); break;
       default: break;
     }
   };

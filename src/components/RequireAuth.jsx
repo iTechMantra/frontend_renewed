@@ -24,7 +24,9 @@ export default function RequireAuth({ children, requiredRole }) {
             navigate('/doctor/login');
           } else if (requiredRole === 'asha') {
             navigate('/asha/login');
-          } else {
+          } else if (requiredRole ==='pharmacy'){
+            navigate('/pharmacy/login');
+          }else {
             navigate('/');
           }
           return;
@@ -38,6 +40,8 @@ export default function RequireAuth({ children, requiredRole }) {
             navigate('/doctor/dashboard');
           } else if (currentRole === 'asha') {
             navigate('/asha/dashboard');
+          }else if (currentRole =='pharmacy'){
+            navigate('/pharmacy/login');
           } else {
             navigate('/');
           }

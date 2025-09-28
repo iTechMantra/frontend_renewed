@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPharmacyByPhone, createPharmacy } from '../services/storageService';
-import { setCurrentUser, setCurrentRole } from '../services/authService';
+import { setCurrentSession } from '../services/authService'; // ✅ Fixed import
 import { translate } from '../services/translationService';
 
 export default function PharmacyLogin() {
@@ -34,9 +34,15 @@ export default function PharmacyLogin() {
       const pharmacy = getPharmacyByPhone(formData.phone);
       
       if (pharmacy) {
-        // Set current user and role
-        setCurrentUser(pharmacy);
-        setCurrentRole('pharmacy');
+        // ✅ Fixed: Use setCurrentSession with proper structure
+        setCurrentSession({ 
+          current: { 
+            role: 'pharmacy', 
+            id: pharmacy.id, 
+            name: pharmacy.name, 
+            loggedAt: new Date().toISOString() 
+          } 
+        });
         
         // Navigate to pharmacy dashboard
         navigate('/pharmacy/dashboard');
@@ -75,9 +81,15 @@ export default function PharmacyLogin() {
       });
 
       if (result.success) {
-        // Set current user and role
-        setCurrentUser(result.pharmacy);
-        setCurrentRole('pharmacy');
+        // ✅ Fixed: Use setCurrentSession with proper structure
+        setCurrentSession({ 
+          current: { 
+            role: 'pharmacy', 
+            id: result.pharmacy.id, 
+            name: result.pharmacy.name, 
+            loggedAt: new Date().toISOString() 
+          } 
+        });
         
         // Navigate to pharmacy dashboard
         navigate('/pharmacy/dashboard');
