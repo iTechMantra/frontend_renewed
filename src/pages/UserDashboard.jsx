@@ -24,6 +24,151 @@ export default function UserDashboard() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Government services data
+  const [governmentServices] = useState([
+    {
+      id: 1,
+      name: 'Ayushman Bharat PM-JAY',
+      description: 'Health insurance scheme providing free healthcare coverage',
+      icon: '🛡️',
+      link: 'https://pmjay.gov.in',
+      category: 'Insurance',
+      eligibility: 'Families based on SECC database',
+      benefits: '₹5 lakh per family per year'
+    },
+    {
+      id: 2,
+      name: 'eSanjeevani Telemedicine',
+      description: 'Free online medical consultation service',
+      icon: '💻',
+      link: 'https://esanjeevani.in',
+      category: 'Telemedicine',
+      eligibility: 'All Indian citizens',
+      benefits: 'Free doctor consultations'
+    },
+    {
+      id: 3,
+      name: 'National Health Mission',
+      description: 'Comprehensive healthcare infrastructure development',
+      icon: '🏥',
+      link: 'https://nhm.gov.in',
+      category: 'Infrastructure',
+      eligibility: 'All citizens',
+      benefits: 'Improved healthcare facilities'
+    },
+    {
+      id: 4,
+      name: 'Pradhan Mantri Bhartiya Janaushadhi Pariyojana',
+      description: 'Affordable quality generic medicines',
+      icon: '💊',
+      link: 'https://janaushadhi.gov.in',
+      category: 'Medicines',
+      eligibility: 'All citizens',
+      benefits: '50-90% cheaper medicines'
+    },
+    {
+      id: 5,
+      name: 'National Telemedicine Service',
+      description: '24x7 teleconsultation services',
+      icon: '📞',
+      link: 'https://telemedicine.icmr.org.in',
+      category: 'Telemedicine',
+      eligibility: 'All citizens',
+      benefits: 'Round-the-clock medical advice'
+    },
+    {
+      id: 6,
+      name: 'Ayushman Bharat Digital Mission',
+      description: 'Digital health ecosystem with health IDs',
+      icon: '📱',
+      link: 'https://abdm.gov.in',
+      category: 'Digital Health',
+      eligibility: 'All citizens',
+      benefits: 'Digital health records'
+    },
+    {
+      id: 7,
+      name: 'National Mental Health Programme',
+      description: 'Mental healthcare services and support',
+      icon: '🧠',
+      link: 'https://nmhp.gov.in',
+      category: 'Mental Health',
+      eligibility: 'All citizens',
+      benefits: 'Free counseling and treatment'
+    },
+    {
+      id: 8,
+      name: 'Reproductive & Child Health',
+      description: 'Maternal and child healthcare services',
+      icon: '👶',
+      link: 'https://nhm.gov.in',
+      category: 'Maternal Health',
+      eligibility: 'Pregnant women & children',
+      benefits: 'Free checkups and care'
+    }
+  ]);
+
+  const [healthSchemes] = useState([
+    {
+      id: 1,
+      name: 'Ayushman Bharat Card',
+      status: 'Active',
+      validity: '2025-12-31',
+      coverage: '₹5,00,000',
+      used: '₹45,000',
+      remaining: '₹4,55,000'
+    },
+    {
+      id: 2,
+      name: 'State Health Insurance',
+      status: 'Active',
+      validity: '2024-12-31',
+      coverage: '₹2,00,000',
+      used: '₹12,000',
+      remaining: '₹1,88,000'
+    },
+    {
+      id: 3,
+      name: 'Senior Citizen Health Plan',
+      status: 'Pending',
+      validity: 'Not Activated',
+      coverage: '₹3,00,000',
+      used: '₹0',
+      remaining: '₹3,00,000'
+    }
+  ]);
+
+  const [healthTips] = useState([
+    {
+      id: 1,
+      title: 'Preventive Health Checkup',
+      description: 'Schedule regular health checkups for early disease detection',
+      category: 'Prevention',
+      icon: '🩺'
+    },
+    {
+      id: 2,
+      title: 'Vaccination Schedule',
+      description: 'Stay updated with recommended vaccination schedules',
+      category: 'Immunization',
+      icon: '💉'
+    },
+    {
+      id: 3,
+      title: 'Healthy Diet',
+      description: 'Follow balanced diet with seasonal fruits and vegetables',
+      category: 'Nutrition',
+      icon: '🍎'
+    },
+    {
+      id: 4,
+      title: 'Physical Activity',
+      description: '30 minutes of daily exercise for better health',
+      category: 'Fitness',
+      icon: '🚶'
+    }
+  ]);
+
   useEffect(() => {
     initializeStorage();
 
@@ -60,7 +205,6 @@ export default function UserDashboard() {
       setOrders(userOrders || []);
     } catch (error) {
       console.error('Error loading user data:', error);
-      // Set empty arrays as fallback
       setHealthRecords([]);
       setPrescriptions([]);
       setOrders([]);
@@ -95,6 +239,16 @@ export default function UserDashboard() {
     alert(translate('Order creation functionality would be implemented here'));
   };
 
+  const handleServiceClick = (service) => {
+    alert(`Redirecting to ${service.name}...\n\nWebsite: ${service.link}`);
+    // In real implementation, you would use:
+    // window.open(service.link, '_blank');
+  };
+
+  const handleApplyScheme = (scheme) => {
+    alert(`Applying for ${scheme.name}...\n\nYou will be redirected to the official portal for application.`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -125,6 +279,8 @@ export default function UserDashboard() {
               { key: 'pharmacy', label: translate('Nearest Pharmacy'), icon: '🏥' },
               { key: 'orders', label: translate('Orders'), icon: '📦' },
               { key: 'chat', label: translate('Chat / Video'), icon: '💬' },
+              { key: 'government', label: translate('Govt Services'), icon: '🇮🇳' },
+              { key: 'schemes', label: translate('Health Schemes'), icon: '🛡️' },
             ].map((item) => (
               <button
                 key={item.key}
@@ -159,6 +315,7 @@ export default function UserDashboard() {
             {/* Home Section */}
             {section === 'home' && (
               <div className="space-y-6">
+                {/* Welcome Card */}
                 <div className="bg-white shadow-lg rounded-2xl p-8 text-center">
                   <h2 className="text-2xl font-bold text-gray-800 mb-2">
                     {translate('Welcome back')}, {user.name || translate('User')}
@@ -168,7 +325,7 @@ export default function UserDashboard() {
                   </p>
 
                   {/* Quick Stats */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">{healthRecords.length}</div>
                       <div className="text-sm text-gray-600">{translate('Health Records')}</div>
@@ -181,11 +338,15 @@ export default function UserDashboard() {
                       <div className="text-2xl font-bold text-purple-600">{orders.length}</div>
                       <div className="text-sm text-gray-600">{translate('Orders')}</div>
                     </div>
+                    <div className="bg-orange-50 p-4 rounded-lg">
+                      <div className="text-2xl font-bold text-orange-600">{healthSchemes.length}</div>
+                      <div className="text-sm text-gray-600">{translate('Health Schemes')}</div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <button
                     onClick={() => setSection('records')}
                     className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
@@ -205,6 +366,15 @@ export default function UserDashboard() {
                   </button>
 
                   <button
+                    onClick={() => setSection('government')}
+                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
+                  >
+                    <div className="text-3xl mb-3">🇮🇳</div>
+                    <h3 className="font-semibold text-gray-800 mb-2">{translate('Govt Services')}</h3>
+                    <p className="text-gray-600 text-sm">{translate('Access government health services')}</p>
+                  </button>
+
+                  <button
                     onClick={() => setSection('chat')}
                     className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
                   >
@@ -212,6 +382,267 @@ export default function UserDashboard() {
                     <h3 className="font-semibold text-gray-800 mb-2">{translate('Consult Doctor')}</h3>
                     <p className="text-gray-600 text-sm">{translate('Start a video consultation with a doctor')}</p>
                   </button>
+                </div>
+
+                {/* Health Tips Section */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    {translate('Health Tips & Recommendations')}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {healthTips.map((tip) => (
+                      <div
+                        key={tip.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="text-2xl mb-2">{tip.icon}</div>
+                        <h4 className="font-medium text-gray-800 mb-2">{tip.title}</h4>
+                        <p className="text-sm text-gray-600">{tip.description}</p>
+                        <span className="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                          {tip.category}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Active Health Schemes Preview */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {translate('Active Health Schemes')}
+                    </h3>
+                    <button
+                      onClick={() => setSection('schemes')}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      {translate('View All')} →
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {healthSchemes.slice(0, 2).map((scheme) => (
+                      <div
+                        key={scheme.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-gray-800">{scheme.name}</h4>
+                          <span className={`px-2 py-1 text-xs rounded-full ${
+                            scheme.status === 'Active' 
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {scheme.status}
+                          </span>
+                        </div>
+                        <div className="space-y-1 text-sm text-gray-600">
+                          <p>Coverage: {scheme.coverage}</p>
+                          <p>Used: {scheme.used}</p>
+                          <p>Remaining: {scheme.remaining}</p>
+                          <p className="text-xs text-gray-500">Valid until: {scheme.validity}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Government Services Section */}
+            {section === 'government' && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    {translate('Government of India Health Services')}
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    {translate('Access various healthcare services provided by the Government of India')}
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {governmentServices.map((service) => (
+                      <div
+                        key={service.id}
+                        className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                        onClick={() => handleServiceClick(service)}
+                      >
+                        <div className="flex items-start space-x-4">
+                          <div className="text-3xl">{service.icon}</div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-gray-800 mb-2">{service.name}</h4>
+                            <p className="text-sm text-gray-600 mb-3">{service.description}</p>
+                            <div className="space-y-1 text-xs text-gray-500">
+                              <div className="flex justify-between">
+                                <span>Category:</span>
+                                <span className="font-medium">{service.category}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Eligibility:</span>
+                                <span className="font-medium text-green-600">{service.eligibility}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Benefits:</span>
+                                <span className="font-medium text-blue-600">{service.benefits}</span>
+                              </div>
+                            </div>
+                            <button className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                              {translate('Access Service')}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Emergency Services */}
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold text-red-800 mb-4">
+                    {translate('Emergency Health Services')}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 bg-white rounded-lg border border-red-300">
+                      <div className="text-2xl mb-2">🚑</div>
+                      <h4 className="font-semibold text-red-700 mb-2">Ambulance</h4>
+                      <p className="text-sm text-gray-600 mb-2">24x7 Emergency Ambulance</p>
+                      <a href="tel:108" className="text-red-600 font-semibold hover:text-red-800">Dial 108</a>
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg border border-red-300">
+                      <div className="text-2xl mb-2">🏥</div>
+                      <h4 className="font-semibold text-red-700 mb-2">Emergency Care</h4>
+                      <p className="text-sm text-gray-600 mb-2">Emergency Medical Services</p>
+                      <a href="tel:102" className="text-red-600 font-semibold hover:text-red-800">Dial 102</a>
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg border border-red-300">
+                      <div className="text-2xl mb-2">📞</div>
+                      <h4 className="font-semibold text-red-700 mb-2">Health Helpline</h4>
+                      <p className="text-sm text-gray-600 mb-2">24x7 Health Advisory</p>
+                      <a href="tel:104" className="text-red-600 font-semibold hover:text-red-800">Dial 104</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Health Schemes Section */}
+            {section === 'schemes' && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-6">
+                    {translate('Your Health Schemes & Insurance')}
+                  </h3>
+
+                  {/* Active Schemes */}
+                  <div className="mb-8">
+                    <h4 className="text-md font-semibold text-gray-800 mb-4">{translate('Active Schemes')}</h4>
+                    <div className="space-y-4">
+                      {healthSchemes.filter(scheme => scheme.status === 'Active').map((scheme) => (
+                        <div
+                          key={scheme.id}
+                          className="border border-green-200 bg-green-50 rounded-lg p-4"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <h5 className="font-semibold text-gray-800">{scheme.name}</h5>
+                            <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                              {translate('Active')}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                            <div>
+                              <p className="text-sm text-gray-600">{translate('Coverage Amount')}</p>
+                              <p className="font-semibold text-green-700">{scheme.coverage}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600">{translate('Amount Used')}</p>
+                              <p className="font-semibold text-orange-600">{scheme.used}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600">{translate('Remaining Balance')}</p>
+                              <p className="font-semibold text-blue-700">{scheme.remaining}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600">{translate('Valid Until')}</p>
+                              <p className="font-semibold text-gray-700">{scheme.validity}</p>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                              {translate('View Details')}
+                            </button>
+                            <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                              {translate('Claim Benefits')}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Available Schemes to Apply */}
+                  <div>
+                    <h4 className="text-md font-semibold text-gray-800 mb-4">{translate('Available Schemes')}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {[
+                        {
+                          name: 'Ayushman Bharat PM-JAY',
+                          description: 'Health insurance coverage for secondary and tertiary care',
+                          coverage: '₹5 Lakh per family',
+                          eligibility: 'Based on SECC criteria',
+                          icon: '🛡️'
+                        },
+                        {
+                          name: 'State Health Scheme',
+                          description: 'Additional health coverage by state government',
+                          coverage: '₹2-3 Lakh',
+                          eligibility: 'State residents',
+                          icon: '🏛️'
+                        },
+                        {
+                          name: 'Senior Citizen Health Insurance',
+                          description: 'Special health insurance for senior citizens',
+                          coverage: '₹3 Lakh',
+                          eligibility: 'Age 60+',
+                          icon: '👴'
+                        },
+                        {
+                          name: 'Maternity Benefit Scheme',
+                          description: 'Financial assistance for pregnant women',
+                          coverage: '₹6,000',
+                          eligibility: 'Pregnant women',
+                          icon: '🤰'
+                        }
+                      ].map((scheme, index) => (
+                        <div
+                          key={index}
+                          className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                        >
+                          <div className="flex items-start space-x-4">
+                            <div className="text-3xl">{scheme.icon}</div>
+                            <div className="flex-1">
+                              <h5 className="font-semibold text-gray-800 mb-2">{scheme.name}</h5>
+                              <p className="text-sm text-gray-600 mb-3">{scheme.description}</p>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Coverage:</span>
+                                  <span className="font-semibold text-green-600">{scheme.coverage}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Eligibility:</span>
+                                  <span className="font-medium text-blue-600">{scheme.eligibility}</span>
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => handleApplyScheme(scheme)}
+                                className="w-full mt-4 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                              >
+                                {translate('Apply Now')}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
