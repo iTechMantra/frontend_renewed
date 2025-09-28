@@ -3,25 +3,25 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentSession } from '../services/authService';
 import { initializeStorage } from '../services/storageService';
-import { translate, initializeTranslations, getToggleLanguage, getToggleLanguageName } from '../services/translationService';
+import { motion } from 'framer-motion';
+import { AiOutlineUser, AiOutlineMedicineBox, AiOutlineTeam, AiOutlineSolution, AiOutlineVideoCamera } from 'react-icons/ai';
+import { Shield, Clock, Users } from 'lucide-react';
+import { Brain, Video, FileText, Truck, Users as UsersIcon, MessageSquare } from 'lucide-react';
+import Footer from '/src/components/Footer';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    // Initialize storage and translations
     initializeStorage();
-    initializeTranslations();
-    
-    // Check if user is already logged in
+
     const session = getCurrentSession();
     if (session?.current) {
       navigate(`/${session.current.role}/dashboard`);
       return;
     }
 
-    // Listen for online/offline events
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -36,309 +36,216 @@ export default function LandingPage() {
 
   const handleRoleSelect = (role) => {
     switch (role) {
-      case 'user':
-        navigate('/user/login');
-        break;
-      case 'doctor':
-        navigate('/doctor/login');
-        break;
-      case 'asha':
-        navigate('/asha/login');
-        break;
-      case 'pharmacy':
-        navigate('/PharmacyDashboard');
-        break;
-      default:
-        break;
+      case 'user': navigate('/user/login'); break;
+      case 'doctor': navigate('/doctor/login'); break;
+      case 'asha': navigate('/asha/login'); break;
+      case 'pharmacy': navigate('/pharmacy'); break;
+      default: break;
     }
   };
+  
+  // Feature Card Component
+  const FeatureCard = ({ icon, title, description, color }) => (
+    <div className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
+      <div className={`${color} w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+        {icon}
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
+    </div>
+  );
 
+  const features = [
+    {
+      icon: <Brain className="h-6 w-6 text-white" />,
+      title: 'AI Symptom Checker',
+      description: 'Advanced AI analyzes symptoms and provides preliminary health assessments with high accuracy.',
+      color: 'bg-gradient-to-br from-purple-500 to-purple-600'
+    },
+    {
+      icon: <Video className="h-6 w-6 text-white" />,
+      title: 'Video Consultations',
+      description: 'Secure, high-quality video calls with certified doctors from the comfort of your home.',
+      color: 'bg-gradient-to-br from-blue-500 to-blue-600'
+    },
+    {
+      icon: <FileText className="h-6 w-6 text-white" />,
+      title: 'Digital Health Records',
+      description: 'Centralized, encrypted health records accessible to you and your healthcare providers.',
+      color: 'bg-gradient-to-br from-teal-500 to-teal-600'
+    },
+    {
+      icon: <Truck className="h-6 w-6 text-white" />,
+      title: 'Medicine Delivery',
+      description: 'Fast, reliable delivery of prescribed medications directly to your doorstep.',
+      color: 'bg-gradient-to-br from-green-500 to-green-600'
+    },
+    {
+      icon: <UsersIcon className="h-6 w-6 text-white" />,
+      title: 'Community Health',
+      description: 'Connect with local ASHA workers and participate in community health programs.',
+      color: 'bg-gradient-to-br from-orange-500 to-orange-600'
+    },
+    {
+      icon: <MessageSquare className="h-6 w-6 text-white" />,
+      title: '24/7 Support',
+      description: 'Round-the-clock customer support and emergency assistance when you need it most.',
+      color: 'bg-gradient-to-br from-red-500 to-red-600'
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg">
-                🏛
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                {translate('E-Sannidhi')}
-              </h1>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              {/* Online Status */}
-              <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm ${
-                isOnline 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
-              }`}>
-                <div className={`w-2 h-2 rounded-full ${
-                  isOnline ? 'bg-green-500' : 'bg-red-500'
-                }`}></div>
-                <span>{isOnline ? translate('Online') : translate('Offline')}</span>
-              </div>
-              
-              {/* Language Toggle */}
-              <button
-                onClick={() => {
-                  const newLang = getToggleLanguage();
-                  localStorage.setItem('appLanguage', newLang);
-                  window.location.reload();
-                }}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                {getToggleLanguageName()}
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 font-sans">
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            {translate('Welcome to')} <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">{translate('E-Sannidhi')}</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            {translate('Your comprehensive telemedicine platform connecting patients, doctors, ASHA workers, and pharmacies for better healthcare access')}
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <button
-              onClick={() => {
-                // The AI Symptom Checker is now available via the chatbot widget
-                alert(translate('AI Symptom Checker is now available via the chatbot widget in the bottom right corner!'));
-              }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg"
-            >
-              🔍 {translate('AI Symptom Checker')}
-            </button>
-            
-            <button
-              onClick={() => navigate('/pharmacy')}
-              className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg"
-            >
-              💊 {translate('Pharmacy')}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Role Selection */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {translate('Choose Your Role')}
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {translate('Select your role to access the appropriate dashboard and features')}
+      <section className="bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 py-16 md:py-24">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              Healthcare{' '}
+              <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-green-600 bg-clip-text text-transparent">
+                Reimagined
+              </span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mb-10 leading-relaxed">
+              Connecting patients, doctors, ASHA workers, and pharmacies through cutting-edge telemedicine technology. 
+              Experience healthcare that's accessible, affordable.
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* User */}
-            <div
-              onClick={() => handleRoleSelect('user')}
-              className="group bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-blue-300"
-            >
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl">👤</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('User')}</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {translate('Access telemedicine services, health records, and connect with healthcare providers')}
-                </p>
-                <div className="text-blue-600 font-semibold group-hover:text-blue-700">
-                  {translate('Login / Sign Up')} →
-                </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+              <div className="flex items-center justify-center space-x-3 bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm">
+                <Shield className="h-6 w-6 text-teal-600" />
+                <span className="font-semibold text-gray-800">Secure & Private</span>
+              </div>
+              <div className="flex items-center justify-center space-x-3 bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm">
+                <Clock className="h-6 w-6 text-blue-600" />
+                <span className="font-semibold text-gray-800">24/7 Available</span>
+              </div>
+              <div className="flex items-center justify-center space-x-3 bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm">
+                <Users className="h-6 w-6 text-green-600" />
+                <span className="font-semibold text-gray-800">Community Care</span>
               </div>
             </div>
-
-            {/* Doctor */}
-            <div
-              onClick={() => handleRoleSelect('doctor')}
-              className="group bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-green-300"
-            >
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl">👩‍⚕️</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Doctor')}</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {translate('Provide telemedicine consultations, manage patients, and prescribe medications')}
-                </p>
-                <div className="text-green-600 font-semibold group-hover:text-green-700">
-                  {translate('Login / Sign Up')} →
-                </div>
-              </div>
-            </div>
-
-            {/* ASHA */}
-            <div
-              onClick={() => handleRoleSelect('asha')}
-              className="group bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-purple-300"
-            >
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl">👩‍⚕️</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('ASHA / Volunteer')}</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {translate('Community health worker - register patients, provide basic care, and connect with doctors')}
-                </p>
-                <div className="text-purple-600 font-semibold group-hover:text-purple-700">
-                  {translate('Login / Sign Up')} →
-                </div>
-              </div>
-            </div>
-
-            {/* Pharmacy */}
-            <div
-              onClick={() => handleRoleSelect('pharmacy')}
-              className="group bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-yellow-300"
-            >
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl">💊</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Pharmacy')}</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {translate('Browse medicines, place orders, and get prescriptions delivered to your doorstep')}
-                </p>
-                <div className="text-yellow-600 font-semibold group-hover:text-yellow-700">
-                  {translate('Enter Pharmacy')} →
-                </div>
-              </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <span className="bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                Get Started Today
+              </span>
+              <span className="border-2 border-gray-300 hover:border-teal-500 text-gray-700 hover:text-teal-600 font-semibold py-3 px-8 rounded-xl transition-all duration-300 bg-white hover:bg-teal-50">
+                Learn More
+              </span>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Features / How it Works */}
+      <section className="py-5 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-6xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Simple steps to access healthcare anywhere</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+            <AiOutlineSolution className="text-4xl text-blue-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-2">Step 1: Register</h3>
+            <p className="text-gray-600">Sign up as a patient, doctor, ASHA, or pharmacy to access the platform</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+            <AiOutlineVideoCamera className="text-4xl text-green-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-2">Step 2: Consult / Upload</h3>
+            <p className="text-gray-600">Patients can consult doctors, upload health records, and track symptoms</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+            <AiOutlineMedicineBox className="text-4xl text-yellow-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-2">Step 3: Get Medicines</h3>
+            <p className="text-gray-600">Order medicines online or visit nearby pharmacies for delivery</p>
+          </div>
+        </div>
+      </section>
+
 
       {/* Features Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {translate('Key Features')}
+              Comprehensive Healthcare Solutions
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {translate('Comprehensive healthcare solutions at your fingertips')}
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Our platform offers a complete suite of healthcare services designed to make quality medical care 
+              accessible to everyone, anywhere, anytime.
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">📹</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Video Consultations')}</h3>
-              <p className="text-gray-600">
-                {translate('Connect with doctors through secure video calls for remote consultations')}
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">📋</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Health Records')}</h3>
-              <p className="text-gray-600">
-                {translate('Store and manage your health records digitally for easy access')}
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">💊</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Medicine Delivery')}</h3>
-              <p className="text-gray-600">
-                {translate('Order medicines online and get them delivered to your doorstep')}
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🤖</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('AI Symptom Checker')}</h3>
-              <p className="text-gray-600">
-                {translate('Get preliminary health insights using our AI-powered symptom analysis')}
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">👥</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Community Health')}</h3>
-              <p className="text-gray-600">
-                {translate('ASHA workers can register and manage community health programs')}
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🌐</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{translate('Multi-language')}</h3>
-              <p className="text-gray-600">
-                {translate('Available in English and Punjabi for better accessibility')}
-              </p>
-            </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {features.map((feature, index) => (
+              <FeatureCard key={index} {...feature} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-full flex items-center justify-center font-bold">
-                  🏛
-                </div>
-                <h3 className="text-xl font-bold">{translate('E-Sannidhi')}</h3>
-              </div>
-              <p className="text-gray-400">
-                {translate('Government of India Initiative')}
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">{translate('Quick Links')}</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><button onClick={() => handleRoleSelect('user')} className="hover:text-white transition-colors">{translate('User Login')}</button></li>
-                <li><button onClick={() => handleRoleSelect('doctor')} className="hover:text-white transition-colors">{translate('Doctor Login')}</button></li>
-                <li><button onClick={() => handleRoleSelect('asha')} className="hover:text-white transition-colors">{translate('ASHA Login')}</button></li>
-                <li><button onClick={() => navigate('/pharmacy')} className="hover:text-white transition-colors">{translate('Pharmacy')}</button></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">{translate('Contact')}</h4>
-              <p className="text-gray-400">
-                {translate('For support and assistance')}
-              </p>
-              <p className="text-gray-400">
-                {translate('Email')}: support@esannidhi.gov.in
-              </p>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>© {new Date().getFullYear()} {translate('E-Sannidhi')}. {translate('All rights reserved')}.</p>
-          </div>
+      
+      {/* Role Selection */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Choose Your Role</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Select your role to access the appropriate dashboard and features</p>
         </div>
-      </footer>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* User */}
+          <motion.div whileHover={{ scale: 1.03 }} onClick={() => handleRoleSelect('user')} className="group bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl shadow-lg hover:shadow-xl cursor-pointer border-2 border-transparent hover:border-blue-300">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AiOutlineUser className="text-white text-2xl" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">User</h3>
+              <p className="text-gray-600 text-sm mb-4">Access telemedicine services, health records, and connect with healthcare providers</p>
+              <div className="text-blue-600 font-semibold group-hover:text-blue-700">Login / Sign Up →</div>
+            </div>
+          </motion.div>
+
+          {/* Doctor */}
+          <motion.div whileHover={{ scale: 1.03 }} onClick={() => handleRoleSelect('doctor')} className="group bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl shadow-lg hover:shadow-xl cursor-pointer border-2 border-transparent hover:border-green-300">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AiOutlineTeam className="text-white text-2xl" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Doctor</h3>
+              <p className="text-gray-600 text-sm mb-4">Provide telemedicine consultations, manage patients, and prescribe medications</p>
+              <div className="text-green-600 font-semibold group-hover:text-green-700">Login / Sign Up →</div>
+            </div>
+          </motion.div>
+
+          {/* ASHA */}
+          <motion.div whileHover={{ scale: 1.03 }} onClick={() => handleRoleSelect('asha')} className="group bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl shadow-lg hover:shadow-xl cursor-pointer border-2 border-transparent hover:border-purple-300">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AiOutlineTeam className="text-white text-2xl" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">ASHA / Volunteer</h3>
+              <p className="text-gray-600 text-sm mb-4">Community health worker - register patients, provide basic care, and connect with doctors</p>
+              <div className="text-purple-600 font-semibold group-hover:text-purple-700">Login / Sign Up →</div>
+            </div>
+          </motion.div>
+
+          {/* Pharmacy */}
+          <motion.div whileHover={{ scale: 1.03 }} onClick={() => handleRoleSelect('pharmacy')} className="group bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-2xl shadow-lg hover:shadow-xl cursor-pointer border-2 border-transparent hover:border-yellow-300">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AiOutlineMedicineBox className="text-white text-2xl" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Pharmacy</h3>
+              <p className="text-gray-600 text-sm mb-4">Browse medicines, place orders, and get prescriptions delivered to your doorstep</p>
+              <div className="text-yellow-600 font-semibold group-hover:text-yellow-700">Enter Pharmacy →</div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+     {/* Footer */}
+     <Footer />
 
     </div>
   );

@@ -1,9 +1,9 @@
 // src/services/authService.js
-import { createUser, getUserByPhone } from './storageService';
-import { createDoctor, getDoctorByPhone } from './storageService';
-import { createAsha, getAshaByPhone } from './storageService';
+import { createUser, getUserByPhone, createDoctor, getDoctorByPhone, createAsha, getAshaByPhone } from './storageService';
 
+// -----------------------------
 // Session management
+// -----------------------------
 export const setCurrentSession = (session) => {
   try {
     localStorage.setItem('session', JSON.stringify(session));
@@ -24,23 +24,49 @@ export const getCurrentSession = () => {
   }
 };
 
+// -----------------------------
+// Set & Get Current User / Role
+// -----------------------------
+export const setCurrentUser = (user) => {
+  try {
+    const session = getCurrentSession();
+    session.current = { ...session.current, id: user.id, name: user.name };
+    localStorage.setItem('session', JSON.stringify(session));
+    return true;
+  } catch (error) {
+    console.error('Error setting current user:', error);
+    return false;
+  }
+};
+
+export const setCurrentRole = (role) => {
+  try {
+    const session = getCurrentSession();
+    session.current = { ...session.current, role };
+    localStorage.setItem('session', JSON.stringify(session));
+    return true;
+  } catch (error) {
+    console.error('Error setting current role:', error);
+    return false;
+  }
+};
+
 export const getCurrentUser = () => {
   try {
     const session = getCurrentSession();
     if (!session.current) return null;
 
     const { role, id } = session.current;
-    
     switch (role) {
       case 'user':
         const users = JSON.parse(localStorage.getItem('users') || '[]');
-        return users.find(user => user.id === id);
+        return users.find(u => u.id === id);
       case 'doctor':
         const doctors = JSON.parse(localStorage.getItem('doctors') || '[]');
-        return doctors.find(doctor => doctor.id === id);
+        return doctors.find(d => d.id === id);
       case 'asha':
         const ashas = JSON.parse(localStorage.getItem('ashas') || '[]');
-        return ashas.find(asha => asha.id === id);
+        return ashas.find(a => a.id === id);
       default:
         return null;
     }
@@ -70,30 +96,16 @@ export const isAuthenticated = () => {
   }
 };
 
-// User authentication
+// -----------------------------
+// Login & Register
+// -----------------------------
 export const loginUser = (phone, password) => {
   try {
     const user = getUserByPhone(phone);
-    
-    if (!user) {
-      return { success: false, error: 'User not found' };
-    }
-    
-    if (user.password !== password) {
-      return { success: false, error: 'Invalid password' };
-    }
-    
-    // Set session
-    const session = {
-      current: {
-        role: 'user',
-        id: user.id,
-        name: user.name,
-        loggedAt: new Date().toISOString()
-      }
-    };
-    setCurrentSession(session);
-    
+    if (!user) return { success: false, error: 'User not found' };
+    if (user.password !== password) return { success: false, error: 'Invalid password' };
+
+    setCurrentSession({ current: { role: 'user', id: user.id, name: user.name, loggedAt: new Date().toISOString() } });
     return { success: true, user };
   } catch (error) {
     console.error('Error logging in user:', error);
@@ -103,44 +115,22 @@ export const loginUser = (phone, password) => {
 
 export const registerUser = (userData) => {
   try {
-    // Check if user already exists
-    const existingUser = getUserByPhone(userData.phone);
-    if (existingUser) {
-      return { success: false, error: 'User already exists' };
-    }
-    
-    const result = createUser(userData);
-    return result;
+    const existing = getUserByPhone(userData.phone);
+    if (existing) return { success: false, error: 'User already exists' };
+    return createUser(userData);
   } catch (error) {
     console.error('Error registering user:', error);
     return { success: false, error: 'Registration failed' };
   }
 };
 
-// Doctor authentication
 export const loginDoctor = (phone, password) => {
   try {
     const doctor = getDoctorByPhone(phone);
-    
-    if (!doctor) {
-      return { success: false, error: 'Doctor not found' };
-    }
-    
-    if (doctor.password !== password) {
-      return { success: false, error: 'Invalid password' };
-    }
-    
-    // Set session
-    const session = {
-      current: {
-        role: 'doctor',
-        id: doctor.id,
-        name: doctor.name,
-        loggedAt: new Date().toISOString()
-      }
-    };
-    setCurrentSession(session);
-    
+    if (!doctor) return { success: false, error: 'Doctor not found' };
+    if (doctor.password !== password) return { success: false, error: 'Invalid password' };
+
+    setCurrentSession({ current: { role: 'doctor', id: doctor.id, name: doctor.name, loggedAt: new Date().toISOString() } });
     return { success: true, user: doctor };
   } catch (error) {
     console.error('Error logging in doctor:', error);
@@ -150,44 +140,22 @@ export const loginDoctor = (phone, password) => {
 
 export const registerDoctor = (doctorData) => {
   try {
-    // Check if doctor already exists
-    const existingDoctor = getDoctorByPhone(doctorData.phone);
-    if (existingDoctor) {
-      return { success: false, error: 'Doctor already exists' };
-    }
-    
-    const result = createDoctor(doctorData);
-    return result;
+    const existing = getDoctorByPhone(doctorData.phone);
+    if (existing) return { success: false, error: 'Doctor already exists' };
+    return createDoctor(doctorData);
   } catch (error) {
     console.error('Error registering doctor:', error);
     return { success: false, error: 'Registration failed' };
   }
 };
 
-// ASHA authentication
 export const loginAsha = (phone, password) => {
   try {
     const asha = getAshaByPhone(phone);
-    
-    if (!asha) {
-      return { success: false, error: 'ASHA worker not found' };
-    }
-    
-    if (asha.password !== password) {
-      return { success: false, error: 'Invalid password' };
-    }
-    
-    // Set session
-    const session = {
-      current: {
-        role: 'asha',
-        id: asha.id,
-        name: asha.name,
-        loggedAt: new Date().toISOString()
-      }
-    };
-    setCurrentSession(session);
-    
+    if (!asha) return { success: false, error: 'ASHA not found' };
+    if (asha.password !== password) return { success: false, error: 'Invalid password' };
+
+    setCurrentSession({ current: { role: 'asha', id: asha.id, name: asha.name, loggedAt: new Date().toISOString() } });
     return { success: true, user: asha };
   } catch (error) {
     console.error('Error logging in ASHA:', error);
@@ -197,25 +165,21 @@ export const loginAsha = (phone, password) => {
 
 export const registerAsha = (ashaData) => {
   try {
-    // Check if ASHA already exists
-    const existingAsha = getAshaByPhone(ashaData.phone);
-    if (existingAsha) {
-      return { success: false, error: 'ASHA worker already exists' };
-    }
-    
-    const result = createAsha(ashaData);
-    return result;
+    const existing = getAshaByPhone(ashaData.phone);
+    if (existing) return { success: false, error: 'ASHA already exists' };
+    return createAsha(ashaData);
   } catch (error) {
     console.error('Error registering ASHA:', error);
     return { success: false, error: 'Registration failed' };
   }
 };
 
+// -----------------------------
 // Logout
+// -----------------------------
 export const logout = () => {
   try {
-    const session = { current: null };
-    setCurrentSession(session);
+    setCurrentSession({ current: null });
     return true;
   } catch (error) {
     console.error('Error logging out:', error);
