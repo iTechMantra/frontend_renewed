@@ -52,13 +52,190 @@ export default function PharmacyDashboard() {
 
   const loadPharmacyData = (pharmacyId) => {
     try {
-      const pharmacyMedicines = getMedicinesByPharmacy(pharmacyId);
+      // Try to get real data first
+      let pharmacyMedicines = getMedicinesByPharmacy(pharmacyId);
+      let pharmacyBills = getBillsByPharmacy(pharmacyId);
+      let pharmacyPrescriptions = getPrescriptionsForPharmacy(pharmacyId);
+
+      // If no real data exists, use dummy data
+      if (pharmacyMedicines.length === 0) {
+        pharmacyMedicines = [
+          {
+            medId: 'MED001',
+            pharmacyId: pharmacyId,
+            name: 'Paracetamol 500mg',
+            company: 'Sun Pharma',
+            quantity: 150,
+            price: 25.50
+          },
+          {
+            medId: 'MED002',
+            pharmacyId: pharmacyId,
+            name: 'Amoxicillin 250mg',
+            company: 'Cipla',
+            quantity: 80,
+            price: 85.00
+          },
+          {
+            medId: 'MED003',
+            pharmacyId: pharmacyId,
+            name: 'Cetirizine 10mg',
+            company: 'Dr. Reddy\'s',
+            quantity: 200,
+            price: 15.75
+          },
+          {
+            medId: 'MED004',
+            pharmacyId: pharmacyId,
+            name: 'Omeprazole 20mg',
+            company: 'Lupin',
+            quantity: 65,
+            price: 120.00
+          },
+          {
+            medId: 'MED005',
+            pharmacyId: pharmacyId,
+            name: 'Metformin 500mg',
+            company: 'Torrent',
+            quantity: 90,
+            price: 45.25
+          },
+          {
+            medId: 'MED006',
+            pharmacyId: pharmacyId,
+            name: 'Aspirin 75mg',
+            company: 'Bayer',
+            quantity: 120,
+            price: 32.00
+          },
+          {
+            medId: 'MED007',
+            pharmacyId: pharmacyId,
+            name: 'Losartan 25mg',
+            company: 'Ranbaxy',
+            quantity: 45,
+            price: 95.50
+          },
+          {
+            medId: 'MED008',
+            pharmacyId: pharmacyId,
+            name: 'Vitamin D3 1000IU',
+            company: 'Abbott',
+            quantity: 180,
+            price: 78.00
+          }
+        ];
+      }
+
+      if (pharmacyBills.length === 0) {
+        pharmacyBills = [
+          {
+            billId: 'BILL001',
+            pharmacyId: pharmacyId,
+            items: [
+              { medId: 'MED001', name: 'Paracetamol 500mg', quantity: 2, price: 25.50 }
+            ],
+            total: 51.00,
+            customerName: 'Rajesh Kumar',
+            customerPhone: '9876543210',
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() // 2 hours ago
+          },
+          {
+            billId: 'BILL002',
+            pharmacyId: pharmacyId,
+            items: [
+              { medId: 'MED003', name: 'Cetirizine 10mg', quantity: 1, price: 15.75 },
+              { medId: 'MED001', name: 'Paracetamol 500mg', quantity: 1, price: 25.50 }
+            ],
+            total: 41.25,
+            customerName: 'Priya Sharma',
+            customerPhone: '9123456789',
+            timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString() // 5 hours ago
+          },
+          {
+            billId: 'BILL003',
+            pharmacyId: pharmacyId,
+            items: [
+              { medId: 'MED004', name: 'Omeprazole 20mg', quantity: 1, price: 120.00 }
+            ],
+            total: 120.00,
+            customerName: 'Mohammad Ali',
+            customerPhone: '9567890123',
+            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+          },
+          {
+            billId: 'BILL004',
+            pharmacyId: pharmacyId,
+            items: [
+              { medId: 'MED002', name: 'Amoxicillin 250mg', quantity: 2, price: 85.00 },
+              { medId: 'MED008', name: 'Vitamin D3 1000IU', quantity: 1, price: 78.00 }
+            ],
+            total: 248.00,
+            customerName: 'Sunita Devi',
+            customerPhone: '9234567890',
+            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+          },
+          {
+            billId: 'BILL005',
+            pharmacyId: pharmacyId,
+            items: [
+              { medId: 'MED005', name: 'Metformin 500mg', quantity: 3, price: 45.25 }
+            ],
+            total: 135.75,
+            customerName: 'Amit Patel',
+            customerPhone: '9345678901',
+            timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days ago
+          }
+        ];
+      }
+
+      if (pharmacyPrescriptions.length === 0) {
+        pharmacyPrescriptions = [
+          {
+            id: 'PRES001',
+            patientId: 'PAT001',
+            patientName: 'Ravi Gupta',
+            text: 'Rx: Amoxicillin 250mg - Take 1 tablet twice daily for 7 days\nParacetamol 500mg - Take as needed for fever/pain\n\nDr. Anjali Verma\nMBBS, MD Internal Medicine',
+            createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+            status: 'pending'
+          },
+          {
+            id: 'PRES002',
+            patientId: 'PAT002',
+            patientName: 'Meera Singh',
+            text: 'Rx: Metformin 500mg - Take 1 tablet twice daily with meals\nOmeprazole 20mg - Take 1 tablet before breakfast\n\nDr. Suresh Reddy\nMBBS, MD Endocrinology',
+            createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
+            status: 'pending'
+          },
+          {
+            id: 'PRES003',
+            patientId: 'PAT003',
+            patientName: 'Kiran Joshi',
+            text: 'Rx: Cetirizine 10mg - Take 1 tablet at bedtime\nVitamin D3 1000IU - Take 1 tablet daily\n\nDr. Priya Nair\nMBBS, MD Dermatology',
+            createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
+            status: 'completed'
+          },
+          {
+            id: 'PRES004',
+            patientId: 'PAT004',
+            patientName: 'Deepak Yadav',
+            text: 'Rx: Losartan 25mg - Take 1 tablet daily in morning\nAspirin 75mg - Take 1 tablet daily after dinner\n\nDr. Rakesh Agarwal\nMBBS, MD Cardiology',
+            createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+            status: 'pending'
+          },
+          {
+            id: 'PRES005',
+            patientId: 'PAT005',
+            patientName: 'Kavya Menon',
+            text: 'Rx: Paracetamol 500mg - Take 1 tablet every 6 hours as needed\nAmoxicillin 250mg - Take 1 tablet three times daily for 5 days\n\nDr. Vikram Shah\nMBBS, MBBS General Practice',
+            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+            status: 'completed'
+          }
+        ];
+      }
+
       setMedicines(pharmacyMedicines);
-
-      const pharmacyBills = getBillsByPharmacy(pharmacyId);
       setBills(pharmacyBills);
-
-      const pharmacyPrescriptions = getPrescriptionsForPharmacy(pharmacyId);
       setPrescriptions(pharmacyPrescriptions);
     } catch (error) {
       console.error('Error loading pharmacy data:', error);
@@ -183,7 +360,7 @@ export default function PharmacyDashboard() {
         // Reset form
         setSellForm({ medId: '', quantity: '', customerName: '', customerPhone: '' });
         
-        alert(`Sale completed! Bill ID: ${result.bill.billId.slice(-8)}`);
+        alert("Sale completed! Bill ID: ${result.bill.billId.slice(-8)}");
       } else {
         alert(result.error || 'Failed to create bill');
       }
@@ -210,30 +387,6 @@ export default function PharmacyDashboard() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Top Navbar */}
-      <header className="bg-white shadow-md flex justify-between items-center px-6 py-3">
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate('/')}
-        >
-          <div className="w-10 h-10 bg-yellow-600 text-white rounded-full flex items-center justify-center font-bold shadow">
-            🏛
-          </div>
-          <h1 className="text-xl font-bold text-yellow-700">{translate('E-Sannidhi Pharmacy')}</h1>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600">
-            {translate('Welcome')}, {pharmacy.name}
-          </span>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
-          >
-            {translate('Logout')}
-          </button>
-        </div>
-      </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
@@ -262,6 +415,17 @@ export default function PharmacyDashboard() {
               </button>
             ))}
           </nav>
+
+          {/* Logout button */}
+          <div className="p-4 border-t">
+            <button
+              onClick={handleLogout}
+              className="w-full text-left px-4 py-3 rounded-lg font-medium bg-red-500 text-white hover:bg-red-600 transition-colors"
+            >
+              <span className="mr-3">🚪</span>
+              {translate('Logout')}
+            </button>
+          </div>
         </div>
 
         {/* Main content */}
@@ -294,7 +458,7 @@ export default function PharmacyDashboard() {
                     </div>
                     <div className="bg-orange-50 p-4 rounded-lg">
                       <div className="text-2xl font-bold text-orange-600">
-                        ₹{bills.reduce((sum, bill) => sum + bill.total, 0)}
+                        ₹{bills.reduce((sum, bill) => sum + bill.total, 0).toFixed(2)}
                       </div>
                       <div className="text-sm text-gray-600">{translate('Total Revenue')}</div>
                     </div>
@@ -456,7 +620,9 @@ export default function PharmacyDashboard() {
                               {medicine.company || '-'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {medicine.quantity}
+                              <span className={medicine.quantity < 20 ? 'text-red-600 font-semibold' : ''}>
+                                {medicine.quantity}
+                              </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               ₹{medicine.price}
@@ -478,7 +644,7 @@ export default function PharmacyDashboard() {
               </div>
             )}
 
-            {/* Sell Medicine */}
+          {/* Sell Medicine */}
             {section === 'sell_medicine' && (
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
@@ -555,7 +721,7 @@ export default function PharmacyDashboard() {
                       <p className="text-sm text-gray-600">
                         {translate('Total Amount')}: ₹{(() => {
                           const selectedMedicine = medicines.find(med => med.medId === sellForm.medId);
-                          return selectedMedicine ? selectedMedicine.price * parseInt(sellForm.quantity || 0) : 0;
+                          return selectedMedicine ? (selectedMedicine.price * parseInt(sellForm.quantity || 0)).toFixed(2) : 0;
                         })()}
                       </p>
                     </div>
@@ -604,7 +770,7 @@ export default function PharmacyDashboard() {
                           {bill.items.map((item, index) => (
                             <div key={index} className="flex justify-between text-sm">
                               <span>{item.name} x {item.quantity}</span>
-                              <span>₹{item.price * item.quantity}</span>
+                              <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                           ))}
                         </div>
@@ -612,7 +778,7 @@ export default function PharmacyDashboard() {
                         <div className="border-t border-gray-200 pt-2 mt-2">
                           <div className="flex justify-between font-medium">
                             <span>{translate('Total')}:</span>
-                            <span>₹{bill.total}</span>
+                            <span>₹{bill.total.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
@@ -637,19 +803,53 @@ export default function PharmacyDashboard() {
                   <div className="space-y-4">
                     {prescriptions.map((prescription) => (
                       <div key={prescription.id} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-gray-900">
-                            {translate('Prescription')} #{prescription.id.slice(-8)}
-                          </h4>
-                          <span className="text-sm text-gray-500">
-                            {new Date(prescription.createdAt).toLocaleDateString()}
-                          </span>
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h4 className="font-medium text-gray-900">
+                              {translate('Prescription')} #{prescription.id.slice(-8)}
+                            </h4>
+                            <p className="text-sm text-gray-600 mt-1">
+                              {translate('Patient')}: {prescription.patientName}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-sm text-gray-500">
+                              {new Date(prescription.createdAt).toLocaleDateString()}
+                            </span>
+                            <div className="mt-1">
+                              <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                                prescription.status === 'pending' 
+                                  ? 'bg-yellow-100 text-yellow-800' 
+                                  : 'bg-green-100 text-green-800'
+                              }`}>
+                                {translate(prescription.status)}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                         
-                        <div className="text-sm text-gray-600">
-                          <p>{translate('Patient ID')}: {prescription.patientId}</p>
-                          <p className="mt-2">{prescription.text}</p>
+                        <div className="bg-gray-50 p-3 rounded-md">
+                          <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
+                            {prescription.text}
+                          </pre>
                         </div>
+                        
+                        {prescription.status === 'pending' && (
+                          <div className="mt-3 flex space-x-2">
+                            <button
+                              onClick={() => {
+                                // Mark as completed
+                                const updatedPrescriptions = prescriptions.map(p => 
+                                  p.id === prescription.id ? { ...p, status: 'completed' } : p
+                                );
+                                setPrescriptions(updatedPrescriptions);
+                              }}
+                              className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
+                            >
+                              {translate('Mark as Completed')}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

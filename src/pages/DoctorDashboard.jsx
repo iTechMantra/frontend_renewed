@@ -151,31 +151,6 @@ export default function DoctorDashboard() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Top Navbar */}
-      <header className="bg-white shadow-md flex justify-between items-center px-6 py-3">
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate('/')}
-        >
-          <div className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold shadow">
-            🏛
-          </div>
-          <h1 className="text-xl font-bold text-green-700">{translate('E-Sannidhi')}</h1>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600">
-            {translate('Dr.')} {doctor.name}
-          </span>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
-          >
-            {translate('Logout')}
-          </button>
-        </div>
-      </header>
-
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <div className="w-64 bg-white shadow-xl flex flex-col">
@@ -203,7 +178,18 @@ export default function DoctorDashboard() {
               </button>
             ))}
           </nav>
-        </div>
+
+          {/* Logout button */}
+          <div className="p-4 border-t">
+            <button
+              onClick={handleLogout}
+              className="w-full text-left px-4 py-3 rounded-lg font-medium bg-red-500 text-white hover:bg-red-600 transition-colors"
+            >
+              <span className="mr-3">🚪</span>
+              {translate('Logout')}
+            </button>
+          </div>
+      </div>
 
         {/* Main content */}
         <div className="flex-1 flex justify-center items-start p-6 overflow-y-auto">

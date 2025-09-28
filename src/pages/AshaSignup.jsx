@@ -156,23 +156,6 @@ export default function AshaSignup() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-purple-100 font-sans">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-purple-700 to-purple-600 text-white py-4 shadow-lg">
-        <div className="max-w-6xl mx-auto flex items-center gap-3 px-4">
-          <div
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            <span className="text-purple-700 font-bold">🏛</span>
-          </div>
-          <h1
-            className="text-2xl font-bold tracking-wide cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            {translate('E-Sannidhi')}
-          </h1>
-        </div>
-      </header>
 
       {/* Main */}
       <main className="flex-grow flex items-center justify-center px-4">

@@ -2,65 +2,98 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPharmacyByPhone, createPharmacy } from '../services/storageService';
-import { setCurrentSession } from '../services/authService'; // ✅ Fixed import
+import { setCurrentSession } from '../services/authService';
 import { translate } from '../services/translationService';
 
 export default function PharmacyLogin() {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+  const [mode, setMode] = useState('login'); // 'login' or 'signup'
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     address: '',
-    license: ''
+    license: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  
+  if (!formData.phone.trim()) {
+    setError('Phone number is required');
+    return;
+  }
 
-    try {
-      const pharmacy = getPharmacyByPhone(formData.phone);
+  if (!formData.password.trim()) {
+    setError('Password is required');
+    return;
+  }
+
+  setLoading(true);
+  setError('');
+  setSuccess('');
+
+  try {
+    const pharmacy = getPharmacyByPhone(formData.phone);
+    
+    if (pharmacy && pharmacy.password === formData.password) {
+      setCurrentSession({ 
+        current: { 
+          role: 'pharmacy', 
+          id: pharmacy.id, 
+          name: pharmacy.name, 
+          loggedAt: new Date().toISOString() 
+        } 
+      });
       
-      if (pharmacy) {
-        // ✅ Fixed: Use setCurrentSession with proper structure
-        setCurrentSession({ 
-          current: { 
-            role: 'pharmacy', 
-            id: pharmacy.id, 
-            name: pharmacy.name, 
-            loggedAt: new Date().toISOString() 
-          } 
-        });
-        
-        // Navigate to pharmacy dashboard
+      setSuccess('Login successful!');
+      setTimeout(() => {
         navigate('/pharmacy/dashboard');
-      } else {
-        setError('Pharmacy not found. Please check your phone number or sign up.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Login failed. Please try again.');
-    } finally {
-      setLoading(false);
+      }, 1000);
+    } else {
+      setError('Invalid phone number or password.');
     }
-  };
+  } catch (error) {
+    setError('An error occurred while logging in');
+    console.error('Login error:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      setError('Pharmacy name is required');
+      return;
+    }
+
+    if (!formData.phone.trim()) {
+      setError('Phone number is required');
+      return;
+    }
+
+    if (!formData.password.trim()) {
+  setError('Password is required');
+  return;
+}
+
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       // Check if pharmacy already exists
@@ -77,11 +110,11 @@ export default function PharmacyLogin() {
         email: formData.email.trim(),
         address: formData.address.trim(),
         license: formData.license.trim(),
+        password: formData.password.trim(), 
         role: 'pharmacy'
       });
 
       if (result.success) {
-        // ✅ Fixed: Use setCurrentSession with proper structure
         setCurrentSession({ 
           current: { 
             role: 'pharmacy', 
@@ -91,196 +124,241 @@ export default function PharmacyLogin() {
           } 
         });
         
-        // Navigate to pharmacy dashboard
-        navigate('/pharmacy/dashboard');
+        setSuccess('Account created successfully!');
+        setTimeout(() => {
+          navigate('/pharmacy/dashboard');
+        }, 1500);
       } else {
-        setError(result.error || 'Signup failed. Please try again.');
+        setError(result.error || 'Failed to create account');
       }
     } catch (error) {
+      setError('An error occurred while creating account');
       console.error('Signup error:', error);
-      setError('Signup failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <div className="w-16 h-16 bg-yellow-600 text-white rounded-full flex items-center justify-center font-bold text-2xl shadow-lg">
-            🏛
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-yellow-50 to-yellow-100 font-sans">
+      {/* Main */}
+      <main className="flex-grow flex items-center justify-center px-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-yellow-100">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              {mode === 'login' ? translate('Pharmacy Login') : translate('Create Pharmacy Account')}
+            </h2>
+            <p className="text-gray-600">
+              {mode === 'login' 
+                ? translate('Login to manage your pharmacy')
+                : translate('Join E-Sannidhi as a pharmacy partner')
+              }
+            </p>
           </div>
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {isLogin ? translate('Pharmacy Login') : translate('Pharmacy Signup')}
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          {isLogin ? (
-            <>
-              {translate('Or')}{' '}
-              <button
-                onClick={() => setIsLogin(false)}
-                className="font-medium text-yellow-600 hover:text-yellow-500"
-              >
-                {translate('create a new pharmacy account')}
-              </button>
-            </>
-          ) : (
-            <>
-              {translate('Or')}{' '}
-              <button
-                onClick={() => setIsLogin(true)}
-                className="font-medium text-yellow-600 hover:text-yellow-500"
-              >
-                {translate('sign in to existing account')}
-              </button>
-            </>
-          )}
-        </p>
-      </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {/* Success Message */}
+          {success && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+              <p className="text-sm text-green-800">{success}</p>
+            </div>
+          )}
+
+          {/* Error Message */}
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
               <p className="text-sm text-red-800">{error}</p>
             </div>
           )}
 
-          <form className="space-y-6" onSubmit={isLogin ? handleLogin : handleSignup}>
-            {!isLogin && (
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  {translate('Pharmacy Name')} *
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required={!isLogin}
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                    placeholder={translate('Enter pharmacy name')}
-                  />
-                </div>
-              </div>
-            )}
+          {/* Mode Toggle */}
+          <div className="flex mb-6 space-x-4">
+            <button
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
+                mode === 'login'
+                  ? 'bg-yellow-600 text-white shadow'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              onClick={() => setMode('login')}
+            >
+              {translate('Login')}
+            </button>
+            <button
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
+                mode === 'signup'
+                  ? 'bg-yellow-600 text-white shadow'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              onClick={() => setMode('signup')}
+            >
+              {translate('Sign Up')}
+            </button>
+          </div>
 
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                {translate('Phone Number')} *
-              </label>
-              <div className="mt-1">
+          {/* Login Form */}
+          {mode === 'login' && (
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {translate('Phone Number')} *
+                </label>
                 <input
-                  id="phone"
-                  name="phone"
                   type="tel"
-                  required
+                  name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                   placeholder={translate('Enter phone number')}
                 />
               </div>
+
+              <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+    {translate('Password')} *
+             </label>
+             <input
+             type="password"
+             name="password"
+             value={formData.password}
+             onChange={handleInputChange}
+             required
+             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+             placeholder={translate('Enter password')}
+            />
             </div>
-
-            {!isLogin && (
-              <>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    {translate('Email')}
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      placeholder={translate('Enter email address')}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    {translate('Address')}
-                  </label>
-                  <div className="mt-1">
-                    <textarea
-                      id="address"
-                      name="address"
-                      rows="3"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      placeholder={translate('Enter pharmacy address')}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="license" className="block text-sm font-medium text-gray-700">
-                    {translate('License Number')}
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="license"
-                      name="license"
-                      type="text"
-                      value={formData.license}
-                      onChange={handleInputChange}
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      placeholder={translate('Enter license number')}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div>
+              
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {isLogin ? translate('Signing in...') : translate('Creating account...')}
-                  </div>
-                ) : (
-                  isLogin ? translate('Sign In') : translate('Create Account')
-                )}
+                {loading ? translate('Logging in...') : translate('Login')}
               </button>
-            </div>
-          </form>
+            </form>
+          )}
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+          {/* Signup Form */}
+          {mode === 'signup' && (
+            <form onSubmit={handleSignup} className="space-y-4">
+              {/* Pharmacy Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {translate('Pharmacy Name')} *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder={translate('Enter pharmacy name')}
+                />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">{translate('Or')}</span>
+
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {translate('Phone Number')} *
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder={translate('Enter phone number')}
+                />
               </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {translate('Email')} (Optional)
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder={translate('Enter email address')}
+                />
+              </div>
+
+              {/* Address */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {translate('Address')} (Optional)
+                </label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  rows="3"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder={translate('Enter pharmacy address')}
+                />
+              </div>
+
+              {/* License */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {translate('License Number')} (Optional)
+                </label>
+                <input
+                  type="text"
+                  name="license"
+                  value={formData.license}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder={translate('Enter license number')}
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+              {translate('Password')} *
+               </label>
+               <input
+               type="password"
+               name="password"
+               value={formData.password}
+               onChange={handleInputChange}
+               required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder={translate('Create password')}
+             />
             </div>
 
-            <div className="mt-6">
               <button
-                onClick={() => navigate('/')}
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors"
+                type="submit"
+                disabled={loading}
+                className="w-full bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {translate('Back to Home')}
+                {loading ? translate('Creating Account...') : translate('Create Account')}
               </button>
-            </div>
-          </div>
+            </form>
+          )}
+
+          {/* Back to Home Link */}
+          <p className="text-sm text-gray-600 mt-6 text-center">
+            <button
+              onClick={() => navigate('/')}
+              className="text-yellow-700 font-semibold hover:underline"
+            >
+              {translate('Back to Home')}
+            </button>
+          </p>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-yellow-900 text-white py-4 text-center text-sm mt-8 shadow-inner">
+        © {new Date().getFullYear()} {translate('E-Sannidhi')} | {translate('Government of India Initiative')}
+      </footer>
     </div>
   );
 }

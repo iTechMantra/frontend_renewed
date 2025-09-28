@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AiOutlineWifi, AiOutlineGlobal, AiOutlineHeart } from 'react-icons/ai';
 import { translate, getToggleLanguage, getToggleLanguageName } from '../services/translationService';
 
 export default function TopNav() {
+  const navigate = useNavigate(); // Added
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const handleLanguageToggle = () => {
@@ -16,13 +18,16 @@ export default function TopNav() {
       <div className="max-w-7xl mx-auto flex justify-between items-center h-20">
         
         {/* Logo & Tagline */}
-        <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => navigate('/')} // Navigate to landing page
+        >
           <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md">
             <AiOutlineHeart className="text-3xl"/>
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="font-extrabold text-2xl text-gray-900">E-Sannidhi</span>
-            <span className="text-base text-gray-500">Connecting care, anytime anywhere</span>
+            <span className="font-extrabold text-2xl text-gray-900">{translate('E-Sannidhi')}</span>
+            <span className="text-base text-gray-500">{translate('Connecting care, anytime anywhere')}</span>
           </div>
         </div>
 
@@ -39,7 +44,7 @@ export default function TopNav() {
             <AiOutlineWifi
               className={`w-4 h-4 ${isOnline ? 'text-green-500' : 'text-red-500'}`}
             />
-            <span>{isOnline ? 'Online' : 'Offline'}</span>
+            <span>{isOnline ? translate('Online') : translate('Offline')}</span>
           </div>
 
           {/* Language Toggle */}

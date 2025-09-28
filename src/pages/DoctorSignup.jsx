@@ -176,35 +176,10 @@ export default function DoctorSignup() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50 to-green-100 font-sans">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-green-700 to-green-600 text-white py-4 shadow-lg">
-        <div className="max-w-6xl mx-auto flex items-center gap-3 px-4">
-          <div
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            <span className="text-green-700 font-bold">🏛</span>
-          </div>
-          <h1
-            className="text-2xl font-bold tracking-wide cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            {translate('E-Sannidhi')}
-          </h1>
-        </div>
-      </header>
 
       {/* Main */}
       <main className="flex-grow flex items-center justify-center px-4">
         <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-green-100">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {translate('Doctor Registration')}
-            </h2>
-            <p className="text-gray-600">
-              {translate('Join E-Sannidhi as a healthcare provider')}
-            </p>
-          </div>
 
           {/* Success Message */}
           {success && (

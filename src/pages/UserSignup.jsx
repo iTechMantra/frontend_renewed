@@ -143,24 +143,6 @@ export default function UserSignup() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-blue-100 font-sans">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-4 shadow-lg">
-        <div className="max-w-6xl mx-auto flex items-center gap-3 px-4">
-          <div
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            <span className="text-blue-900 font-bold">🏛</span>
-          </div>
-          <h1
-            className="text-2xl font-bold tracking-wide cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            {translate('E-Sannidhi')}
-          </h1>
-        </div>
-      </header>
-
       {/* Main */}
       <main className="flex-grow flex items-center justify-center px-4">
         <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-blue-100">
