@@ -30,6 +30,10 @@ export const initializeStorage = () => {
     localStorage.setItem('bills', JSON.stringify([]));
     localStorage.setItem('pharmacyPrescriptions', JSON.stringify([]));
     
+    // ASHA functionality storage
+    localStorage.setItem('ashaPatients', JSON.stringify([]));
+    localStorage.setItem('campaigns', JSON.stringify([]));
+    
     // Mark as initialized
     localStorage.setItem('storageInitialized', 'true');
     
@@ -469,6 +473,10 @@ export const createAsha = (ashaData) => {
     };
     ashas.push(newAsha);
     writeStorage('ashas', ashas);
+    
+    // Initialize default ASHA data
+    initializeAshaData(newAsha.id);
+    
     return { success: true, user: newAsha };
   } catch (error) {
     console.error('Error creating ASHA:', error);
@@ -982,6 +990,491 @@ export const getPrescriptionsForPharmacy = (pharmacyId) => {
   }
 };
 
+// ==================== ASHA-PATIENT MANAGEMENT FUNCTIONS ====================
+
+// ASHA-Patient relationship management
+export const addPatientToAsha = (ashaId, patientData) => {
+  try {
+    const ashaPatients = readStorage('ashaPatients', []);
+    const newPatient = {
+      id: uuidv4(),
+      ashaId: ashaId,
+      patientId: patientData.id,
+      patientName: patientData.name,
+      patientPhone: patientData.phone,
+      patientAge: patientData.age,
+      patientVillage: patientData.village,
+      healthCondition: patientData.healthCondition || 'Not specified',
+      registeredDate: new Date().toISOString(),
+      lastVisit: null,
+      healthStatus: 'Good',
+      notes: '',
+      isSystemPatient: false // Mark as manually added by ASHA
+    };
+    
+    ashaPatients.push(newPatient);
+    writeStorage('ashaPatients', ashaPatients);
+    return { success: true, patient: newPatient };
+  } catch (error) {
+    console.error('Error adding patient to ASHA:', error);
+    return { success: false, error: 'Failed to add patient' };
+  }
+};
+
+export const getPatientsByAsha = (ashaId) => {
+  try {
+    const ashaPatients = readStorage('ashaPatients', []);
+    return ashaPatients.filter(ap => ap.ashaId === ashaId);
+  } catch (error) {
+    console.error('Error getting patients by ASHA:', error);
+    return [];
+  }
+};
+
+export const updatePatientHealthStatus = (ashaPatientId, updates) => {
+  try {
+    const ashaPatients = readStorage('ashaPatients', []);
+    const patientIndex = ashaPatients.findIndex(ap => ap.id === ashaPatientId);
+    
+    if (patientIndex !== -1) {
+      ashaPatients[patientIndex] = { 
+        ...ashaPatients[patientIndex], 
+        ...updates,
+        lastVisit: new Date().toISOString()
+      };
+      writeStorage('ashaPatients', ashaPatients);
+      return { success: true, patient: ashaPatients[patientIndex] };
+    }
+    
+    return { success: false, error: 'Patient not found' };
+  } catch (error) {
+    console.error('Error updating patient health status:', error);
+    return { success: false, error: 'Failed to update patient' };
+  }
+};
+
+// Get patient details including their health records and prescriptions
+export const getPatientFullDetails = (patientId) => {
+  try {
+    const patients = readStorage('patients', []);
+    const healthRecords = getHealthRecordsByPatient(patientId);
+    const prescriptions = getPrescriptionsByPatient(patientId);
+    const patient = patients.find(p => p.id === patientId);
+    
+    return {
+      patient,
+      healthRecords,
+      prescriptions,
+      healthRecordsCount: healthRecords.length,
+      prescriptionsCount: prescriptions.length
+    };
+  } catch (error) {
+    console.error('Error getting patient full details:', error);
+    return null;
+  }
+};
+
+// Campaign management for ASHA workers
+export const createCampaign = (campaignData) => {
+  try {
+    const campaigns = readStorage('campaigns', []);
+    const newCampaign = {
+      id: uuidv4(),
+      ...campaignData,
+      createdAt: new Date().toISOString(),
+      status: 'active'
+    };
+    campaigns.push(newCampaign);
+    writeStorage('campaigns', campaigns);
+    return { success: true, campaign: newCampaign };
+  } catch (error) {
+    console.error('Error creating campaign:', error);
+    return { success: false, error: 'Failed to create campaign' };
+  }
+};
+
+export const getCampaignsByAsha = (ashaId) => {
+  try {
+    const campaigns = readStorage('campaigns', []);
+    return campaigns.filter(campaign => campaign.ashaId === ashaId);
+  } catch (error) {
+    console.error('Error getting campaigns by ASHA:', error);
+    return [];
+  }
+};
+
+export const updateCampaign = (campaignId, updates) => {
+  try {
+    const campaigns = readStorage('campaigns', []);
+    const campaignIndex = campaigns.findIndex(c => c.id === campaignId);
+    
+    if (campaignIndex !== -1) {
+      campaigns[campaignIndex] = { ...campaigns[campaignIndex], ...updates };
+      writeStorage('campaigns', campaigns);
+      return { success: true, campaign: campaigns[campaignIndex] };
+    }
+    
+    return { success: false, error: 'Campaign not found' };
+  } catch (error) {
+    console.error('Error updating campaign:', error);
+    return { success: false, error: 'Failed to update campaign' };
+  }
+};
+
+// Get all users (for ASHA to see all registered patients)
+export const getUsers = () => {
+  try {
+    return readStorage('users', []);
+  } catch (error) {
+    console.error('Error getting users:', error);
+    return [];
+  }
+};
+
+// ==================== ENHANCED ASHA FUNCTIONS ====================
+
+// Get all patients with their full details for ASHA dashboard
+export const getAllPatientsWithDetails = (ashaId) => {
+  try {
+    const ashaPatients = getPatientsByAsha(ashaId);
+    return ashaPatients.map(ashaPatient => {
+      const fullDetails = getPatientFullDetails(ashaPatient.patientId);
+      return {
+        ...ashaPatient,
+        ...fullDetails
+      };
+    });
+  } catch (error) {
+    console.error('Error getting all patients with details:', error);
+    return [];
+  }
+};
+
+// Get patient's complete dashboard data
+export const getPatientDashboardData = (patientId) => {
+  try {
+    const healthRecords = getHealthRecordsByPatient(patientId);
+    const prescriptions = getPrescriptionsByPatient(patientId);
+    const orders = getOrders().filter(order => order.userId === patientId);
+    const patient = readStorage('patients', []).find(p => p.id === patientId);
+    const user = readStorage('users', []).find(u => u.id === patientId);
+
+    return {
+      user: user || patient,
+      healthRecords,
+      prescriptions,
+      orders,
+      healthRecordsCount: healthRecords.length,
+      prescriptionsCount: prescriptions.length,
+      ordersCount: orders.length,
+      lastActivity: getLastPatientActivity(patientId)
+    };
+  } catch (error) {
+    console.error('Error getting patient dashboard data:', error);
+    return null;
+  }
+};
+
+// Get last patient activity
+export const getLastPatientActivity = (patientId) => {
+  try {
+    const healthRecords = getHealthRecordsByPatient(patientId);
+    const prescriptions = getPrescriptionsByPatient(patientId);
+    const orders = getOrders().filter(order => order.userId === patientId);
+    
+    const allActivities = [
+      ...healthRecords.map(r => ({ type: 'health_record', date: r.createdAt })),
+      ...prescriptions.map(p => ({ type: 'prescription', date: p.createdAt })),
+      ...orders.map(o => ({ type: 'order', date: o.createdAt }))
+    ];
+    
+    if (allActivities.length === 0) return null;
+    
+    return allActivities.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  } catch (error) {
+    console.error('Error getting last patient activity:', error);
+    return null;
+  }
+};
+
+// Search medicines with advanced filtering
+export const searchMedicines = (searchTerm, filters = {}) => {
+  try {
+    const medicines = getMedicines();
+    let filtered = medicines;
+
+    // Text search
+    if (searchTerm) {
+      filtered = filtered.filter(medicine =>
+        medicine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        medicine.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        medicine.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        medicine.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Category filter
+    if (filters.category && filters.category !== 'all') {
+      filtered = filtered.filter(medicine => 
+        medicine.category.toLowerCase() === filters.category.toLowerCase()
+      );
+    }
+
+    // Price range filter
+    if (filters.minPrice !== undefined) {
+      filtered = filtered.filter(medicine => medicine.price >= filters.minPrice);
+    }
+    if (filters.maxPrice !== undefined) {
+      filtered = filtered.filter(medicine => medicine.price <= filters.maxPrice);
+    }
+
+    return filtered;
+  } catch (error) {
+    console.error('Error searching medicines:', error);
+    return [];
+  }
+};
+
+// Get pharmacy statistics
+export const getPharmacyStatistics = () => {
+  try {
+    const pharmacies = getPharmacies();
+    return {
+      totalPharmacies: pharmacies.length,
+      openNow: pharmacies.filter(p => p.isOpen).length,
+      twentyFourSeven: pharmacies.filter(p => p.openTime === '24/7').length,
+      averageDistance: pharmacies.reduce((sum, p) => {
+        const dist = parseFloat(p.distance);
+        return sum + (isNaN(dist) ? 0 : dist);
+      }, 0) / pharmacies.length
+    };
+  } catch (error) {
+    console.error('Error getting pharmacy statistics:', error);
+    return null;
+  }
+};
+
+// Get ASHA worker statistics
+export const getAshaStatistics = (ashaId) => {
+  try {
+    const patients = getPatientsByAsha(ashaId);
+    const campaigns = getCampaignsByAsha(ashaId);
+    const totalHealthRecords = patients.reduce((total, patient) => 
+      total + getHealthRecordsByPatient(patient.patientId).length, 0
+    );
+
+    return {
+      totalPatients: patients.length,
+      activeCampaigns: campaigns.filter(c => c.status === 'active').length,
+      totalHealthRecords,
+      completedCampaigns: campaigns.filter(c => c.status === 'completed').length,
+      patientLocations: getPatientLocations(patients)
+    };
+  } catch (error) {
+    console.error('Error getting ASHA statistics:', error);
+    return null;
+  }
+};
+
+// Get patient locations for mapping
+export const getPatientLocations = (patients) => {
+  try {
+    const locations = {};
+    patients.forEach(patient => {
+      const village = patient.patientVillage;
+      if (village) {
+        locations[village] = (locations[village] || 0) + 1;
+      }
+    });
+    return locations;
+  } catch (error) {
+    console.error('Error getting patient locations:', error);
+    return {};
+  }
+};
+
+// Initialize default ASHA data
+export const initializeAshaData = (ashaId) => {
+  try {
+    // Create some default campaigns for new ASHA workers
+    const defaultCampaigns = [
+      {
+        id: `campaign-${ashaId}-1`,
+        title: 'Community Health Awareness',
+        description: 'General health awareness campaign for the community',
+        targetVillage: 'Demo Village',
+        campaignDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        ashaId: ashaId,
+        ashaName: 'ASHA Worker',
+        participants: 0,
+        status: 'planned',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: `campaign-${ashaId}-2`,
+        title: 'Immunization Drive',
+        description: 'Vaccination campaign for children and pregnant women',
+        targetVillage: 'Demo Village',
+        campaignDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        ashaId: ashaId,
+        ashaName: 'ASHA Worker',
+        participants: 0,
+        status: 'planned',
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    defaultCampaigns.forEach(campaign => {
+      createCampaign(campaign);
+    });
+
+    console.log(`Default ASHA data initialized for: ${ashaId}`);
+    return true;
+  } catch (error) {
+    console.error('Error initializing ASHA data:', error);
+    return false;
+  }
+};
+
+// Get medicine categories for filtering
+export const getMedicineCategories = () => {
+  try {
+    const medicines = getMedicines();
+    const categories = [...new Set(medicines.map(medicine => medicine.category))];
+    return categories.sort();
+  } catch (error) {
+    console.error('Error getting medicine categories:', error);
+    return [];
+  }
+};
+
+// Update ASHA patient record
+export const updateAshaPatient = (ashaPatientId, updates) => {
+  try {
+    const ashaPatients = readStorage('ashaPatients', []);
+    const patientIndex = ashaPatients.findIndex(ap => ap.id === ashaPatientId);
+    
+    if (patientIndex !== -1) {
+      ashaPatients[patientIndex] = { 
+        ...ashaPatients[patientIndex], 
+        ...updates 
+      };
+      writeStorage('ashaPatients', ashaPatients);
+      return { success: true, patient: ashaPatients[patientIndex] };
+    }
+    
+    return { success: false, error: 'Patient not found' };
+  } catch (error) {
+    console.error('Error updating ASHA patient:', error);
+    return { success: false, error: 'Failed to update patient' };
+  }
+};
+
+// Delete ASHA patient
+export const deleteAshaPatient = (ashaPatientId) => {
+  try {
+    const ashaPatients = readStorage('ashaPatients', []);
+    const updatedPatients = ashaPatients.filter(ap => ap.id !== ashaPatientId);
+    writeStorage('ashaPatients', updatedPatients);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting ASHA patient:', error);
+    return { success: false, error: 'Failed to delete patient' };
+  }
+};
+
+// Get campaign statistics
+export const getCampaignStatistics = (ashaId) => {
+  try {
+    const campaigns = getCampaignsByAsha(ashaId);
+    return {
+      total: campaigns.length,
+      active: campaigns.filter(c => c.status === 'active').length,
+      completed: campaigns.filter(c => c.status === 'completed').length,
+      planned: campaigns.filter(c => c.status === 'planned').length,
+      totalParticipants: campaigns.reduce((sum, c) => sum + (c.participants || 0), 0)
+    };
+  } catch (error) {
+    console.error('Error getting campaign statistics:', error);
+    return null;
+  }
+};
+
+// ==================== PATIENT AUTO-DISCOVERY FUNCTIONS ====================
+
+// Get all patient users (users with role 'user')
+export const getAllPatientUsers = () => {
+  try {
+    const users = readStorage('users', []);
+    const patients = readStorage('patients', []);
+    
+    // Combine user data with patient data
+    return users
+      .filter(user => user.role === 'user')
+      .map(user => {
+        const patientData = patients.find(p => p.id === user.id) || {};
+        return {
+          id: user.id,
+          name: user.name,
+          phone: user.phone,
+          email: user.email,
+          location: user.location,
+          age: patientData.age || 'Not specified',
+          village: patientData.village || 'Not specified',
+          healthCondition: patientData.healthCondition || 'Not specified',
+          registeredDate: user.createdAt,
+          healthStatus: 'Good', // Default status
+          registeredBy: 'system', // Mark as system registered
+          isSystemPatient: true // Flag to identify system patients
+        };
+      });
+  } catch (error) {
+    console.error('Error getting all patient users:', error);
+    return [];
+  }
+};
+
+// Get combined patients (ASHA-added + system users)
+export const getCombinedPatients = (ashaId) => {
+  try {
+    const ashaPatients = getPatientsByAsha(ashaId);
+    const systemPatients = getAllPatientUsers();
+    
+    // Combine and remove duplicates (prioritize ASHA-added patients)
+    const combined = [...ashaPatients];
+    
+    systemPatients.forEach(systemPatient => {
+      const exists = ashaPatients.some(ashaPatient => 
+        ashaPatient.patientId === systemPatient.id || 
+        ashaPatient.patientPhone === systemPatient.phone
+      );
+      
+      if (!exists) {
+        combined.push({
+          id: `system-${systemPatient.id}`,
+          ashaId: ashaId,
+          patientId: systemPatient.id,
+          patientName: systemPatient.name,
+          patientPhone: systemPatient.phone,
+          patientAge: systemPatient.age,
+          patientVillage: systemPatient.village,
+          healthCondition: systemPatient.healthCondition,
+          registeredDate: systemPatient.registeredDate,
+          lastVisit: null,
+          healthStatus: systemPatient.healthStatus,
+          notes: 'Auto-registered from system',
+          isSystemPatient: true
+        });
+      }
+    });
+    
+    return combined;
+  } catch (error) {
+    console.error('Error getting combined patients:', error);
+    return [];
+  }
+};
+
 // Migration function for existing data
 export const migrateLegacyStorage = () => {
   try {
@@ -992,5 +1485,37 @@ export const migrateLegacyStorage = () => {
   } catch (error) {
     console.error('Error migrating legacy storage:', error);
     return false;
+  }
+};
+
+// Get all ASHA workers
+export const getAllAshas = () => {
+  try {
+    return readStorage('ashas', []);
+  } catch (error) {
+    console.error('Error getting all ASHAs:', error);
+    return [];
+  }
+};
+
+// Get user by ID
+export const getUserById = (userId) => {
+  try {
+    const users = readStorage('users', []);
+    return users.find(user => user.id === userId);
+  } catch (error) {
+    console.error('Error getting user by ID:', error);
+    return null;
+  }
+};
+
+// Get ASHA by ID
+export const getAshaById = (ashaId) => {
+  try {
+    const ashas = readStorage('ashas', []);
+    return ashas.find(asha => asha.id === ashaId);
+  } catch (error) {
+    console.error('Error getting ASHA by ID:', error);
+    return null;
   }
 };
