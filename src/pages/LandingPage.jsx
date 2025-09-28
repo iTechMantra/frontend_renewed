@@ -188,7 +188,7 @@ export default function LandingPage() {
 
       
       {/* Role Selection */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-3 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Choose Your Role</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">Select your role to access the appropriate dashboard and features</p>
