@@ -114,27 +114,21 @@ export default function UserDashboard() {
       name: 'Ayushman Bharat Card',
       status: 'Active',
       validity: '2025-12-31',
-      coverage: '₹5,00,000',
-      used: '₹45,000',
-      remaining: '₹4,55,000'
+      coverage: '₹5,00,000'
     },
     {
       id: 2,
       name: 'State Health Insurance',
       status: 'Active',
       validity: '2024-12-31',
-      coverage: '₹2,00,000',
-      used: '₹12,000',
-      remaining: '₹1,88,000'
+      coverage: '₹2,00,000'
     },
     {
       id: 3,
       name: 'Senior Citizen Health Plan',
       status: 'Pending',
       validity: 'Not Activated',
-      coverage: '₹3,00,000',
-      used: '₹0',
-      remaining: '₹3,00,000'
+      coverage: '₹3,00,000'
     }
   ]);
 
@@ -437,8 +431,6 @@ export default function UserDashboard() {
                         </div>
                         <div className="space-y-1 text-sm text-gray-600">
                           <p>Coverage: {scheme.coverage}</p>
-                          <p>Used: {scheme.used}</p>
-                          <p>Remaining: {scheme.remaining}</p>
                           <p className="text-xs text-gray-500">Valid until: {scheme.validity}</p>
                         </div>
                       </div>
@@ -448,7 +440,7 @@ export default function UserDashboard() {
               </div>
             )}
 
-            {/* Government Services Section */}
+            {/* Government Services Section - MOVED BEFORE HEALTH SCHEMES */}
             {section === 'government' && (
               <div className="space-y-6">
                 <div className="bg-white p-6 rounded-lg shadow-md">
@@ -547,18 +539,10 @@ export default function UserDashboard() {
                               {translate('Active')}
                             </span>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                             <div>
                               <p className="text-sm text-gray-600">{translate('Coverage Amount')}</p>
                               <p className="font-semibold text-green-700">{scheme.coverage}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-gray-600">{translate('Amount Used')}</p>
-                              <p className="font-semibold text-orange-600">{scheme.used}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-gray-600">{translate('Remaining Balance')}</p>
-                              <p className="font-semibold text-blue-700">{scheme.remaining}</p>
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">{translate('Valid Until')}</p>
@@ -742,7 +726,7 @@ export default function UserDashboard() {
               </div>
             )}
 
-            {/* Health Records Section */}
+            {/* Other sections (records, prescriptions, medicine, pharmacy, orders, chat) remain the same */}
             {section === 'records' && (
               <div className="space-y-6">
                 <div className="bg-white p-6 rounded-lg shadow-md">
@@ -796,7 +780,6 @@ export default function UserDashboard() {
               </div>
             )}
 
-            {/* Prescriptions Section */}
             {section === 'prescriptions' && (
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
@@ -838,7 +821,6 @@ export default function UserDashboard() {
               </div>
             )}
 
-            {/* Medicine Search Section */}
             {section === 'medicine' && (
               <MedicineSearch
                 onSelect={handleMedicineSelect}
@@ -847,7 +829,6 @@ export default function UserDashboard() {
               />
             )}
 
-            {/* Pharmacy Section */}
             {section === 'pharmacy' && (
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
@@ -903,7 +884,6 @@ export default function UserDashboard() {
               </div>
             )}
 
-            {/* Orders Section */}
             {section === 'orders' && (
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <div className="flex items-center justify-between mb-4">
@@ -963,7 +943,6 @@ export default function UserDashboard() {
               </div>
             )}
 
-            {/* Chat/Video Section */}
             {section === 'chat' && (
               <MessageVideoSection />
             )}
