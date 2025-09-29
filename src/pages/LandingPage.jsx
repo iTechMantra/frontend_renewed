@@ -9,15 +9,15 @@ import { User, Stethoscope, Heart, Pill } from 'lucide-react';
 import { storage } from '../utils/storage';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
-import { translate, getToggleLanguage, setLanguage, getToggleLanguageName, getCurrentLanguage } from '../services/translationService';
+import { translate, initializeTranslations, getToggleLanguage, getToggleLanguageName } from '../services/translationService';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [lang, setLang] = useState(getCurrentLanguage());
 
   useEffect(() => {
     initializeStorage();
+    initializeTranslations();
 
     const session = getCurrentSession();
     if (session?.current) {
@@ -31,13 +31,9 @@ export default function LandingPage() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    const handleStorageChange = () => setLang(getCurrentLanguage());
-    window.addEventListener('storage', handleStorageChange);
-
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-      window.removeEventListener('storage', handleStorageChange);
     };
   }, [navigate]);
 
@@ -57,8 +53,8 @@ export default function LandingPage() {
       <div className={`${color} w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
         {icon}
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{translate(title)}</h3>
-      <p className="text-gray-600 text-sm leading-relaxed">{translate(description)}</p>
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
     </div>
   );
 
@@ -88,52 +84,53 @@ export default function LandingPage() {
       <div className={`${gradient} w-16 h-16 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{translate(title)}</h3>
-      <p className="text-gray-600 mb-4">{translate(description)}</p>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 mb-4">{description}</p>
       <div className="flex items-center text-teal-600 font-semibold group-hover:translate-x-1 transition-transform duration-300">
-        <span>{translate('Get Started →')}</span>
+        <span>Get Started →</span>
       </div>
     </motion.div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 font-sans relative">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 font-sans">
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              {translate('Healthcare')} {' '}
+              Healthcare{' '}
               <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-green-600 bg-clip-text text-transparent">
-                {translate('Reimagined')}
+                Reimagined
               </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-10 leading-relaxed">
-              {translate('Connecting patients, doctors, ASHA workers, and pharmacies through cutting-edge telemedicine technology. Experience healthcare that\'s accessible, affordable.')}
+              Connecting Patients, Doctors, Asha Workers, and Pharmacies through cutting-edge telemedicine technology. 
+              Experience healthcare that's accessible, affordable.
             </p>
-
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
               <div className="flex items-center justify-center space-x-3 bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm">
                 <Shield className="h-6 w-6 text-teal-600" />
-                <span className="font-semibold text-gray-800">{translate('Secure & Private')}</span>
+                <span className="font-semibold text-gray-800">Secure & Private</span>
               </div>
               <div className="flex items-center justify-center space-x-3 bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm">
                 <Clock className="h-6 w-6 text-blue-600" />
-                <span className="font-semibold text-gray-800">{translate('24/7 Available')}</span>
+                <span className="font-semibold text-gray-800">24/7 Available</span>
               </div>
               <div className="flex items-center justify-center space-x-3 bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm">
                 <Users className="h-6 w-6 text-green-600" />
-                <span className="font-semibold text-gray-800">{translate('Community Care')}</span>
+                <span className="font-semibold text-gray-800">Community Care</span>
               </div>
             </div>
-
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <span className="bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                {translate('Get Started Today')}
+                Get Started Today
               </span>
               <span className="border-2 border-gray-300 hover:border-teal-500 text-gray-700 hover:text-teal-600 font-semibold py-3 px-8 rounded-xl transition-all duration-300 bg-white hover:bg-teal-50">
-                {translate('Learn More')}
+                Learn More
               </span>
             </div>
           </div>
@@ -143,24 +140,24 @@ export default function LandingPage() {
       {/* How it Works */}
       <section className="py-5 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-6xl mx-auto text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{translate('How It Works')}</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{translate('Simple steps to access healthcare anywhere')}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Simple steps to access healthcare anywhere</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-xl shadow-lg text-center">
             <Shield className="text-4xl text-blue-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">{translate('Step 1: Register')}</h3>
-            <p className="text-gray-600">{translate('Sign up as a patient, doctor, ASHA, or pharmacy to access the platform')}</p>
+            <h3 className="text-xl font-bold mb-2">Step 1: Register</h3>
+            <p className="text-gray-600">Sign up as a patient, doctor, ASHA, or pharmacy to access the platform</p>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-lg text-center">
             <Clock className="text-4xl text-green-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">{translate('Step 2: Consult / Upload')}</h3>
-            <p className="text-gray-600">{translate('Patients can consult doctors, upload health records, and track symptoms')}</p>
+            <h3 className="text-xl font-bold mb-2">Step 2: Consult / Upload</h3>
+            <p className="text-gray-600">Patients can consult doctors, upload health records, and track symptoms</p>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-lg text-center">
             <Users className="text-4xl text-yellow-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">{translate('Step 3: Get Medicines')}</h3>
-            <p className="text-gray-600">{translate('Order medicines online or visit nearby pharmacies for delivery')}</p>
+            <h3 className="text-xl font-bold mb-2">Step 3: Get Medicines</h3>
+            <p className="text-gray-600">Order medicines online or visit nearby pharmacies for delivery</p>
           </div>
         </div>
       </section>
@@ -169,9 +166,9 @@ export default function LandingPage() {
       <section className="py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{translate('Comprehensive Healthcare Solutions')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Comprehensive Healthcare Solutions</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              {translate('Our platform offers a complete suite of healthcare services designed to make quality medical care accessible to everyone, anywhere, anytime.')}
+              Our platform offers a complete suite of healthcare services designed to make quality medical care accessible to everyone, anywhere, anytime.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -184,9 +181,9 @@ export default function LandingPage() {
       <section className="py-16 md:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{translate('Choose Your Role')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Choose Your Role</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {translate('Select your role to access personalized features and tools designed specifically for your healthcare needs.')}
+              Select your role to access personalized features and tools designed specifically for your healthcare needs.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
