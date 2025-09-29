@@ -20,6 +20,23 @@ const DUMMY_PATIENTS = [
     phone: '+91-9876543210',
     address: 'Village: Bandargalli, Tehsil: Adra, District: Purulia, West Bengal',
     medicalHistory: ['Diabetes', 'Hypertension'],
+    healthRecords: [
+      {
+        id: 'hr1',
+        type: 'Blood Test',
+        date: '2024-09-15',
+        result: 'Blood Sugar: 180 mg/dl, HbA1c: 7.2%',
+        status: 'Completed'
+      },
+      {
+        id: 'hr2',
+        type: 'Prescription',
+        date: '2024-09-20',
+        result: 'Metformin 500mg twice daily',
+        status: 'Active'
+      }
+    ],
+    schemes: ['Ayushman Bharat', 'State Health Scheme'],
     lastVisit: '2024-09-20T10:30:00Z',
     registeredBy: 'ASHA'
   },
@@ -31,6 +48,16 @@ const DUMMY_PATIENTS = [
     phone: '+91-9123456789',
     address: 'Village: Jhalda, District: Purulia, West Bengal',
     medicalHistory: ['Anemia'],
+    healthRecords: [
+      {
+        id: 'hr3',
+        type: 'Blood Test',
+        date: '2024-09-10',
+        result: 'Hemoglobin: 9.8 g/dL',
+        status: 'Completed'
+      }
+    ],
+    schemes: ['Ayushman Bharat'],
     lastVisit: '2024-09-22T14:15:00Z',
     registeredBy: 'Self'
   },
@@ -42,6 +69,23 @@ const DUMMY_PATIENTS = [
     phone: '+91-8765432109',
     address: 'Village: Puncha, Tehsil: Baghmundi, District: Purulia, West Bengal',
     medicalHistory: ['Arthritis', 'Heart Disease'],
+    healthRecords: [
+      {
+        id: 'hr4',
+        type: 'X-Ray',
+        date: '2024-09-05',
+        result: 'Mild osteoarthritis in both knees',
+        status: 'Completed'
+      },
+      {
+        id: 'hr5',
+        type: 'ECG',
+        date: '2024-09-12',
+        result: 'Normal sinus rhythm',
+        status: 'Completed'
+      }
+    ],
+    schemes: ['Senior Citizen Health Card', 'Ayushman Bharat'],
     lastVisit: '2024-09-18T09:45:00Z',
     registeredBy: 'ASHA'
   },
@@ -53,6 +97,16 @@ const DUMMY_PATIENTS = [
     phone: '+91-7654321098',
     address: 'Village: Balarampur, District: Purulia, West Bengal',
     medicalHistory: ['Pregnancy - 6 months'],
+    healthRecords: [
+      {
+        id: 'hr6',
+        type: 'Ultrasound',
+        date: '2024-09-22',
+        result: 'Single live fetus, 24 weeks gestation',
+        status: 'Completed'
+      }
+    ],
+    schemes: ['Pradhan Mantri Matru Vandana Yojana', 'State Health Scheme'],
     lastVisit: '2024-09-25T11:20:00Z',
     registeredBy: 'ASHA'
   },
@@ -64,6 +118,16 @@ const DUMMY_PATIENTS = [
     phone: '+91-6543210987',
     address: 'Village: Raghunathpur, District: Purulia, West Bengal',
     medicalHistory: ['Asthma'],
+    healthRecords: [
+      {
+        id: 'hr7',
+        type: 'Pulmonary Test',
+        date: '2024-09-08',
+        result: 'Mild obstructive pattern',
+        status: 'Completed'
+      }
+    ],
+    schemes: ['Ayushman Bharat'],
     lastVisit: '2024-09-15T16:30:00Z',
     registeredBy: 'Self'
   }
@@ -110,7 +174,8 @@ const DUMMY_PRESCRIPTIONS = [
     doctorName: 'Dr. Sarah Johnson',
     text: 'Metformin 500mg - Take twice daily after meals\nInsulin Glargine - 10 units before bedtime\nBlood sugar monitoring - Check fasting glucose daily\nDiet: Low carb, high fiber diet recommended',
     createdAt: '2024-09-26T14:30:00Z',
-    status: 'active'
+    status: 'active',
+    sentToPharmacy: false
   },
   {
     id: 'pr2',
@@ -119,7 +184,8 @@ const DUMMY_PRESCRIPTIONS = [
     doctorName: 'Dr. Sarah Johnson',
     text: 'Iron Folic Acid tablets - Take one daily with water\nVitamin C tablets - Take with iron tablet for better absorption\nIncrease green leafy vegetables in diet\nFollow up in 4 weeks',
     createdAt: '2024-09-24T11:15:00Z',
-    status: 'active'
+    status: 'active',
+    sentToPharmacy: true
   },
   {
     id: 'pr3',
@@ -128,7 +194,8 @@ const DUMMY_PRESCRIPTIONS = [
     doctorName: 'Dr. Sarah Johnson',
     text: 'Paracetamol 500mg - Take as needed for pain (max 3 times daily)\nPhysiotherapy exercises - 15 minutes twice daily\nWarm compress on affected joints\nAvoid heavy lifting\nFollow up in 2 weeks',
     createdAt: '2024-09-22T16:45:00Z',
-    status: 'completed'
+    status: 'completed',
+    sentToPharmacy: true
   }
 ];
 
@@ -153,6 +220,45 @@ const DUMMY_MESSAGES = [
   }
 ];
 
+const ACTIVE_HEALTH_SCHEMES = [
+  {
+    id: 's1',
+    name: 'Ayushman Bharat - Pradhan Mantri Jan Arogya Yojana (AB-PMJAY)',
+    description: 'Provides health coverage of ₹5 lakh per family per year for secondary and tertiary care hospitalization',
+    coverage: '₹5 Lakh per family/year',
+    eligibility: 'Families identified through SECC database',
+    enrolledPatients: 3,
+    status: 'Active'
+  },
+  {
+    id: 's2',
+    name: 'Pradhan Mantri Matru Vandana Yojana (PMMVY)',
+    description: 'Maternity benefit program providing financial assistance to pregnant women and lactating mothers',
+    coverage: '₹5,000 in 3 installments',
+    eligibility: 'Pregnant women and lactating mothers',
+    enrolledPatients: 1,
+    status: 'Active'
+  },
+  {
+    id: 's3',
+    name: 'Senior Citizen Health Insurance Scheme',
+    description: 'Health insurance coverage for senior citizens with pre-existing diseases covered from day one',
+    coverage: '₹1 Lakh per year',
+    eligibility: 'Indian citizens above 60 years',
+    enrolledPatients: 1,
+    status: 'Active'
+  },
+  {
+    id: 's4',
+    name: 'West Bengal State Health Scheme',
+    description: 'Comprehensive health coverage for residents of West Bengal',
+    coverage: '₹2 Lakh per family/year',
+    eligibility: 'Residents of West Bengal',
+    enrolledPatients: 2,
+    status: 'Active'
+  }
+];
+
 export default function DoctorDashboard() {
   const navigate = useNavigate();
   const [doctor, setDoctor] = useState(null);
@@ -164,6 +270,7 @@ export default function DoctorDashboard() {
   const [activeVideoRoom, setActiveVideoRoom] = useState(null);
   const [videoParticipant, setVideoParticipant] = useState('');
   const [loading, setLoading] = useState(true);
+  const [healthSchemes] = useState(ACTIVE_HEALTH_SCHEMES);
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -233,13 +340,14 @@ export default function DoctorDashboard() {
 
       // Create new prescription
       const newPrescription = {
-        id: `pr${prescriptions.length + 1}`,
+        id:  `pr${prescriptions.length + 1}`,
         patientId,
         patientName: selectedPatient.name,
         doctorName: doctor.name,
         text: prescriptionText.trim(),
         createdAt: new Date().toISOString(),
-        status: 'active'
+        status: 'active',
+        sentToPharmacy: false
       };
 
       setPrescriptions(prev => [newPrescription, ...prev]);
@@ -252,6 +360,23 @@ export default function DoctorDashboard() {
     } catch (error) {
       console.error('Error completing visit:', error);
       alert('Failed to complete visit');
+    }
+  };
+
+  const handleSendToPharmacy = (prescriptionId) => {
+    try {
+      setPrescriptions(prev => 
+        prev.map(pres => 
+          pres.id === prescriptionId 
+            ? { ...pres, sentToPharmacy: true }
+            : pres
+        )
+      );
+      
+      alert('Prescription sent to pharmacy successfully!');
+    } catch (error) {
+      console.error('Error sending to pharmacy:', error);
+      alert('Failed to send prescription to pharmacy');
     }
   };
 
@@ -285,7 +410,7 @@ export default function DoctorDashboard() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Top Navbar */}
+    
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
@@ -297,6 +422,7 @@ export default function DoctorDashboard() {
               { key: 'waiting', label: translate('Waiting Room'), icon: '⏳' },
               { key: 'chat', label: translate('Chat / Video'), icon: '💬' },
               { key: 'prescriptions', label: translate('Prescriptions'), icon: '💊' },
+              { key: 'schemes', label: translate('Health Schemes'), icon: '🏥' },
               { key: 'stats', label: translate('Statistics'), icon: '📊' },
               { key: 'profile', label: translate('Profile'), icon: '👤' },
             ].map((item) => (
@@ -354,7 +480,7 @@ export default function DoctorDashboard() {
               <div className="space-y-6">
                 <div className="bg-white shadow-lg rounded-2xl p-8 text-center">
                   <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                    {translate('Welcome')}, {translate('Dr.')} {doctor.name} 👩‍⚕️
+                    {translate('Welcome')}, {translate('Dr.')} {doctor.name} 👩‍⚕
                   </h2>
                   <p className="text-gray-600 mb-6">
                     {translate('Manage your patients and provide telemedicine services')}
@@ -412,6 +538,36 @@ export default function DoctorDashboard() {
                     <p className="text-gray-600 text-sm">{translate('View recent prescriptions')}</p>
                     <div className="mt-2 text-green-600 font-medium">{prescriptions.length} prescriptions</div>
                   </button>
+
+                  <button
+                    onClick={() => setSection('schemes')}
+                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
+                  >
+                    <div className="text-3xl mb-3">🏥</div>
+                    <h3 className="font-semibold text-gray-800 mb-2">{translate('Health Schemes')}</h3>
+                    <p className="text-gray-600 text-sm">{translate('Active government health schemes')}</p>
+                    <div className="mt-2 text-purple-600 font-medium">{healthSchemes.length} active schemes</div>
+                  </button>
+
+                  <button
+                    onClick={() => setSection('stats')}
+                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
+                  >
+                    <div className="text-3xl mb-3">📊</div>
+                    <h3 className="font-semibold text-gray-800 mb-2">{translate('Statistics')}</h3>
+                    <p className="text-gray-600 text-sm">{translate('View performance metrics')}</p>
+                    <div className="mt-2 text-indigo-600 font-medium">View analytics</div>
+                  </button>
+
+                  <button
+                    onClick={() => setSection('profile')}
+                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
+                  >
+                    <div className="text-3xl mb-3">👤</div>
+                    <h3 className="font-semibold text-gray-800 mb-2">{translate('Profile')}</h3>
+                    <p className="text-gray-600 text-sm">{translate('Manage your profile')}</p>
+                    <div className="mt-2 text-gray-600 font-medium">Dr. {doctor.name}</div>
+                  </button>
                 </div>
               </div>
             )}
@@ -420,18 +576,28 @@ export default function DoctorDashboard() {
             {section === 'patients' && (
               <div className="bg-white rounded-lg shadow-md">
                 <div className="p-6 border-b border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    {translate('All Patients')} ({patients.length})
-                  </h3>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {translate('All Patients')} ({patients.length})
+                    </h3>
+                    <div className="flex gap-2">
+                      <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                        ASHA: {patients.filter(p => p.registeredBy === 'ASHA').length}
+                      </span>
+                      <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                        Self: {patients.filter(p => p.registeredBy === 'Self').length}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div className="p-6">
-                  <div className="grid gap-4">
+                  <div className="grid gap-6">
                     {patients.map((patient) => (
-                      <div key={patient.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={patient.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h4 className="font-semibold text-gray-800">{patient.name}</h4>
+                            <div className="flex items-center gap-3 mb-3">
+                              <h4 className="font-semibold text-gray-800 text-lg">{patient.name}</h4>
                               <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                                 {patient.age} yrs, {patient.gender}
                               </span>
@@ -443,25 +609,77 @@ export default function DoctorDashboard() {
                                 {patient.registeredBy}
                               </span>
                             </div>
-                            <p className="text-sm text-gray-600 mb-1">📱 {patient.phone}</p>
-                            <p className="text-sm text-gray-600 mb-2">📍 {patient.address}</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                              <div>
+                                <p className="text-sm text-gray-600 mb-1">📱 {patient.phone}</p>
+                                <p className="text-sm text-gray-600">📍 {patient.address}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-600">
+                                  Last visit: {new Date(patient.lastVisit).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Medical History */}
                             {patient.medicalHistory.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mb-2">
-                                {patient.medicalHistory.map((condition, index) => (
-                                  <span key={index} className="px-2 py-1 bg-red-50 text-red-700 text-xs rounded">
-                                    {condition}
-                                  </span>
-                                ))}
+                              <div className="mb-3">
+                                <h5 className="font-medium text-gray-700 text-sm mb-1">Medical History:</h5>
+                                <div className="flex flex-wrap gap-1">
+                                  {patient.medicalHistory.map((condition, index) => (
+                                    <span key={index} className="px-2 py-1 bg-red-50 text-red-700 text-xs rounded">
+                                      {condition}
+                                    </span>
+                                  ))}
+                                </div>
                               </div>
                             )}
-                            <p className="text-xs text-gray-500">
-                              Last visit: {new Date(patient.lastVisit).toLocaleDateString()}
-                            </p>
+
+                            {/* Health Records */}
+                            {patient.healthRecords && patient.healthRecords.length > 0 && (
+                              <div className="mb-3">
+                                <h5 className="font-medium text-gray-700 text-sm mb-1">Health Records:</h5>
+                                <div className="space-y-2">
+                                  {patient.healthRecords.slice(0, 2).map((record) => (
+                                    <div key={record.id} className="flex justify-between items-center text-xs bg-gray-50 p-2 rounded">
+                                      <span className="font-medium">{record.type}</span>
+                                      <span className="text-gray-600">{record.date}</span>
+                                      <span className={`px-1 py-0.5 rounded ${
+                                        record.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                      }`}>
+                                        {record.status}
+                                      </span>
+                                    </div>
+                                  ))}
+                                  {patient.healthRecords.length > 2 && (
+                                    <p className="text-xs text-gray-500">
+                                      +{patient.healthRecords.length - 2} more records
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Health Schemes */}
+                            {patient.schemes && patient.schemes.length > 0 && (
+                              <div>
+                                <h5 className="font-medium text-gray-700 text-sm mb-1">Active Health Schemes:</h5>
+                                <div className="flex flex-wrap gap-1">
+                                  {patient.schemes.map((scheme, index) => (
+                                    <span key={index} className="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded">
+                                      {scheme}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                          <div className="flex flex-col gap-2">
+                          
+                          <div className="flex flex-col gap-2 ml-4">
                             <button
                               onClick={() => handleStartVideoCall(patient)}
-                              className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                              className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
                             >
                               📹 Video Call
                             </button>
@@ -470,9 +688,19 @@ export default function DoctorDashboard() {
                                 setSelectedPatient(patient);
                                 setSection('chat');
                               }}
-                              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                             >
                               💬 Chat
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedPatient(patient);
+                                setSection('chat');
+                                document.getElementById('prescription-text')?.focus();
+                              }}
+                              className="px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+                            >
+                              💊 Prescribe
                             </button>
                           </div>
                         </div>
@@ -494,7 +722,9 @@ export default function DoctorDashboard() {
                 <div className="p-6">
                   {waitingVisits.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
-                      No patients waiting
+                      <div className="text-4xl mb-4">⏳</div>
+                      <p className="text-lg">No patients waiting</p>
+                      <p className="text-sm text-gray-400 mt-2">Patients will appear here when they request consultations</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -548,7 +778,7 @@ export default function DoctorDashboard() {
                     
                     {/* Patient Info */}
                     <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                         <div>
                           <span className="font-medium">Age:</span> {selectedPatient.age}
                         </div>
@@ -559,8 +789,15 @@ export default function DoctorDashboard() {
                           <span className="font-medium">Phone:</span> {selectedPatient.phone}
                         </div>
                         <div>
+                          <span className="font-medium">Registered By:</span> {selectedPatient.registeredBy}
+                        </div>
+                        <div className="md:col-span-2">
                           <span className="font-medium">Medical History:</span> 
                           {selectedPatient.medicalHistory.join(', ')}
+                        </div>
+                        <div className="md:col-span-2">
+                          <span className="font-medium">Health Schemes:</span> 
+                          {selectedPatient.schemes?.join(', ') || 'None'}
                         </div>
                       </div>
                     </div>
@@ -647,13 +884,22 @@ export default function DoctorDashboard() {
                                 {new Date(prescription.createdAt).toLocaleTimeString()}
                               </p>
                             </div>
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              prescription.status === 'active' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-gray-100 text-gray-800'
-                            }`}>
-                              {prescription.status}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                prescription.status === 'active' 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {prescription.status}
+                              </span>
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                prescription.sentToPharmacy
+                                  ? 'bg-blue-100 text-blue-800'
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {prescription.sentToPharmacy ? 'Sent to Pharmacy' : 'Pending'}
+                              </span>
+                            </div>
                           </div>
                           <div className="bg-gray-50 p-3 rounded-lg">
                             <h5 className="font-medium text-gray-800 mb-2">{translate('Prescription Details')}:</h5>
@@ -665,9 +911,14 @@ export default function DoctorDashboard() {
                             <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
                               {translate('Print')}
                             </button>
-                            <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
-                              {translate('Send to Pharmacy')}
-                            </button>
+                            {!prescription.sentToPharmacy && (
+                              <button 
+                                onClick={() => handleSendToPharmacy(prescription.id)}
+                                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                              >
+                                {translate('Send to Pharmacy')}
+                              </button>
+                            )}
                             <button className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition-colors">
                               {translate('Edit')}
                             </button>
@@ -676,6 +927,84 @@ export default function DoctorDashboard() {
                       ))}
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Health Schemes */}
+            {section === 'schemes' && (
+              <div className="bg-white rounded-lg shadow-md">
+                <div className="p-6 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {translate('Active Health Schemes')} ({healthSchemes.length})
+                  </h3>
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {healthSchemes.map((scheme) => (
+                      <div key={scheme.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-semibold text-gray-800 text-lg">{scheme.name}</h4>
+                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                            {scheme.status}
+                          </span>
+                        </div>
+                        
+                        <p className="text-sm text-gray-600 mb-4">{scheme.description}</p>
+                        
+                        <div className="space-y-2 mb-4">
+                          <div className="flex justify-between text-sm">
+                            <span className="font-medium text-gray-700">Coverage:</span>
+                            <span className="text-green-600 font-semibold">{scheme.coverage}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="font-medium text-gray-700">Eligibility:</span>
+                            <span className="text-gray-600">{scheme.eligibility}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="font-medium text-gray-700">Enrolled Patients:</span>
+                            <span className="text-blue-600 font-semibold">{scheme.enrolledPatients}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2 mt-4">
+                          <button className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                            View Details
+                          </button>
+                          <button className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+                            Enroll Patient
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Scheme Statistics */}
+                  <div className="mt-8 p-6 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold text-gray-800 mb-4">Scheme Enrollment Statistics</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="bg-white p-4 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-blue-600">{healthSchemes.reduce((sum, scheme) => sum + scheme.enrolledPatients, 0)}</div>
+                        <div className="text-sm text-gray-600">Total Enrollments</div>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-green-600">{healthSchemes.length}</div>
+                        <div className="text-sm text-gray-600">Active Schemes</div>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-purple-600">
+                          {Math.round(healthSchemes.reduce((sum, scheme) => sum + scheme.enrolledPatients, 0) / patients.length * 100)}%
+                        </div>
+                        <div className="text-sm text-gray-600">Coverage Rate</div>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-orange-600">
+                          {healthSchemes.find(s => s.name.includes('Ayushman'))?.enrolledPatients || 0}
+                        </div>
+                        <div className="text-sm text-gray-600">Ayushman Bharat</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -696,7 +1025,7 @@ export default function DoctorDashboard() {
                 <div className="p-6">
                   <div className="flex items-center mb-6">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-3xl mr-4">
-                      👩‍⚕️
+                      👩‍⚕
                     </div>
                     <div>
                       <h4 className="text-xl font-semibold text-gray-800">{translate('Dr.')} {doctor.name}</h4>
@@ -762,7 +1091,7 @@ export default function DoctorDashboard() {
                   
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <h5 className="font-medium text-gray-800 mb-3">{translate('Performance Metrics')}</h5>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <div className="bg-blue-50 p-4 rounded-lg text-center">
                         <div className="text-2xl font-bold text-blue-600">{doctor.attendedCount || 142}</div>
                         <div className="text-sm text-gray-600">{translate('Patients Treated')}</div>
@@ -774,6 +1103,12 @@ export default function DoctorDashboard() {
                       <div className="bg-purple-50 p-4 rounded-lg text-center">
                         <div className="text-2xl font-bold text-purple-600">{doctor.rating || '4.8'}⭐</div>
                         <div className="text-sm text-gray-600">{translate('Average Rating')}</div>
+                      </div>
+                      <div className="bg-orange-50 p-4 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-orange-600">
+                          {healthSchemes.reduce((sum, scheme) => sum + scheme.enrolledPatients, 0)}
+                        </div>
+                        <div className="text-sm text-gray-600">{translate('Scheme Enrollments')}</div>
                       </div>
                     </div>
                   </div>
